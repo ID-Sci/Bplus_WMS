@@ -50,7 +50,7 @@
     "react-native-modal": "^13.0.0",
     "react-native-navigation-drawer-layout": "^0.0.7",
     "react-native-network-info": "^5.2.1",
-    "react-native-paper": "^4.9.2",
+    "react-native-paper": "^4.11.2",
     "react-native-permissions": "^3.1.0",
     "react-native-qr-decode-image-camera": "^1.0.6",
     "react-native-qrcode-scanner": "^1.5.4",

@@ -31,7 +31,7 @@ import archiveJobInfo from './screens/ArchiveJob/archiveJobInfo';
 import saveArchiveJobInfo from './screens/ArchiveJob/saveArchiveJobInfo';
 import nextDelivery from './screens/Delivery/nextDelivery';
 import deliveryInfo from './screens/Delivery/deliveryInfo';
-
+import saveDeliveryInfo from './screens/Delivery/saveDeliveryInfo';
 
 import SelectBase from './pages/SelectBase';
 import ScanScreen from './pages/ScanScreen';
@@ -54,7 +54,6 @@ const App = () => {
 
     return (
       <LoginStack.Navigator>
-
         <LoginStack.Screen
           options={{ headerShown: false }}
           name="Login"
@@ -116,6 +115,11 @@ const App = () => {
                 options={{ headerShown: false }}
                 name="deliveryInfo"
                 component={deliveryInfo}
+              />
+                 <MainStack.Screen
+                options={{ headerShown: false }}
+                name="saveDeliveryInfo"
+                component={saveDeliveryInfo}
               />
 
             </MainStack.Navigator>

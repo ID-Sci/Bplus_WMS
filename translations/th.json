@@ -126,7 +126,7 @@
     "code": "รหัสบัตรสมาชิก",
     "rewardPoint": "แต้มสะสม",
     "dateOfExpiry": "วันหมดอายุบัตร",
-    "rewardPointToday": "แต้มวันนี้ ( มีผลวันถัดไป )",
+    "rewardPointToday": "แต้มวันนี้ ( มีผลวัน )",
     "detail": "รายละเอียด"
   },
   "privilageForMember": {
@@ -218,7 +218,7 @@
   },
   "button": {
     "back": "กลับ",
-    "next": "ถัดไป",
+    "next": "",
     "select": "โปรดระบุ"
   }
 }

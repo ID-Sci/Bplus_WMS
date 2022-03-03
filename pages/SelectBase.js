@@ -75,7 +75,7 @@ const SelectBase = ({ route }) => {
     secureTextEntry: true,
   });
   const [updateindex, setUpdateindex] = useState(null)
- 
+
   const setlanguageState = (itemValue) => {
     dispatch(loginActions.setLanguage(itemValue))
     console.log(itemValue)
@@ -396,141 +396,38 @@ const SelectBase = ({ route }) => {
   };
 
   return (
-    <View style={container1}>
-      
-        <View style={tabbar}>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}>
-              <FontAwesome name="arrow-left" style={{ color: Colors.backgroundLoginColorSecondary, }} size={FontSize.large} />
-            </TouchableOpacity>
-            <Text
-              style={{
-                marginLeft: 12,
-                fontSize: FontSize.medium,
-                color: Colors.backgroundLoginColorSecondary,
-              }}> {Language.t('selectBase.header')}</Text>
-          </View>
-          <View>
-            <Picker
-              selectedValue={selectlanguage}
-              style={{ color: Colors.backgroundLoginColorSecondary, width: 110 }}
-              mode="dropdown"
-              onValueChange={(itemValue, itemIndex) => Alert.alert('', Language.t('menu.changeLanguage'), [{ text: Language.t('alert.ok'), onPress: () => console.log(' setlanguageState(itemValue)') }, { text: Language.t('alert.cancel'), onPress: () => { } }])} >
-              <Picker.Item label="TH" value="th" />
-              <Picker.Item label="EN" value="en" />
-            </Picker>
-          </View>
-        </View>
+    <>
 
+      <View style={tabbar}>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}>
+            <FontAwesome name="arrow-left" style={{ color: Colors.backgroundLoginColorSecondary, }} size={FontSize.large} />
+          </TouchableOpacity>
+          <Text
+            style={{
+              marginLeft: 12,
+              fontSize: FontSize.medium,
+              color: Colors.backgroundLoginColorSecondary,
+            }}> {Language.t('selectBase.header')}</Text>
+        </View>
+        <View>
+          <Picker
+            selectedValue={selectlanguage}
+            style={{ color: Colors.backgroundLoginColorSecondary, width: 110 }}
+            mode="dropdown"
+            onValueChange={(itemValue, itemIndex) => Alert.alert('', Language.t('menu.changeLanguage'), [{ text: Language.t('alert.ok'), onPress: () => console.log(' setlanguageState(itemValue)') }, { text: Language.t('alert.cancel'), onPress: () => { } }])} >
+            <Picker.Item label="TH" value="th" />
+            <Picker.Item label="EN" value="en" />
+          </Picker>
+        </View>
+      </View>
+
+      <View style={container1}>
         <ScrollView>
           <SafeAreaView >
-            <KeyboardAvoidingView keyboardVerticalOffset={1} behavior={'position'}>
+            <KeyboardAvoidingView keyboardVerticalOffset={1} >
               <View style={styles.body}>
-                <View style={styles.body1}>
-                  <Text style={styles.textTitle}>
-                    {Language.t('selectBase.title')} :
-                  </Text>
-                </View>
-                <View style={{
-                  marginTop: 10, flexDirection: 'row',
-                  justifyContent: 'center', borderColor: items.length > 0 ? Colors.buttonColorPrimary : '#979797', backgroundColor: Colors.backgroundColorSecondary, borderWidth: 1, padding: 10, borderRadius: 10,
-                }}>
-
-                  <Text style={{ fontSize: FontSize.large }}></Text>
-
-                  {items.length > 0 ? (
-                    <Picker
-                      selectedValue={selectbaseValue}
-                      enabled={true}
-                      mode="dropdown"
-                      style={{ color: Colors.buttonColorPrimary, backgroundColor: Colors.backgroundColorSecondary }}
-                      onValueChange={(itemValue, itemIndex) => _onPressSelectbaseValue(itemValue)}>
-                      {items.map((obj, index) => {
-                        return (
-                          <Picker.Item label={obj.nameser} color={Colors.buttonColorPrimary} value={obj.nameser} />
-                        )
-                      })}
-                      {
-                        <Picker.Item
-                          value="-1"
-                          color={Colors.buttonColorPrimary}
-                          label={Language.t('selectBase.lebel')}
-                        />
-                      }
-                    </Picker>
-                  ) : (
-                    <Picker
-                      selectedValue={selectbaseValue}
-                      state={{ color: Colors.buttonColorPrimary, backgroundColor: Colors.borderColor }}
-                      onValueChange={(itemValue, itemIndex) => _onPressSelectbaseValue(itemValue)}
-                      enabled={false}
-                      mode="dropdown"
-                    >
-                      {
-                        <Picker.Item
-                          value="-1"
-                          color={Colors.buttonColorPrimary}
-                          label={Language.t('selectBase.lebel')}
-                        />
-                      }
-                    </Picker>
-                  )}
-                </View>
-                <View style={{ marginTop: 10 }}>
-                  <Text style={styles.textTitle}>
-                    {Language.t('selectBase.name')} :
-                  </Text>
-                </View>
-                <View style={{ marginTop: 10 }}>
-                  <View
-                    style={{
-                      backgroundColor: Colors.backgroundColorSecondary,
-                      flexDirection: 'column',
-                      borderWidth: 1,
-                      borderColor: Colors.buttonColorPrimary,
-                      height: 50,
-                      borderRadius: 10,
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      paddingTop: 10,
-                      paddingBottom: 10,
-
-
-                    }}>
-                    <View style={{ height: 30, flexDirection: 'row' }}>
-                   
-                      <TextInput
-                        style={{
-                          flex: 8,
-                          marginLeft: 10,
-                          borderBottomColor: Colors.buttonColorPrimary,
-                          color: Colors.fontColor,
-                          paddingVertical: 3,
-                          fontSize: FontSize.medium,
-                          borderBottomWidth: 0.7,
-                        }}
-
-                        placeholderTextColor={Colors.fontColorSecondary}
-
-                        placeholder={Language.t('selectBase.name') + '..'}
-                        value={basename}
-                        onChangeText={(val) => {
-                          setBasename(val);
-                        }}></TextInput>
-                      <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
-
-                        <FontAwesome
-                          name="qrcode"
-                          size={25}
-                          color={Colors.buttonColorPrimary}
-                        />
-
-                      </TouchableOpacity>
-
-                    </View>
-                  </View>
-                </View>
                 <View style={{ marginTop: 10 }}>
                   <Text style={styles.textTitle}>
                     {Language.t('selectBase.url')} :
@@ -553,7 +450,7 @@ const SelectBase = ({ route }) => {
 
                     }}>
                     <View style={{ height: 'auto', flexDirection: 'row' }}>
-                    
+
                       <TextInput
                         style={{
                           flex: 8,
@@ -573,13 +470,21 @@ const SelectBase = ({ route }) => {
                         onChangeText={(val) => {
                           setBsaeurl(val);
                         }}></TextInput>
+                      <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
 
+                        <FontAwesome
+                          name="qrcode"
+                          size={25}
+                          color={Colors.buttonColorPrimary}
+                        />
+
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
                 <View style={{ marginTop: 10 }}>
                   <Text style={styles.textTitle}>
-                    {'GUID : '} 
+                    {'GUID : '}
                   </Text>
                 </View>
                 <View style={{ marginTop: 10 }}>
@@ -597,7 +502,7 @@ const SelectBase = ({ route }) => {
                       paddingBottom: 10
                     }}>
                     <View style={{ height: 30, flexDirection: 'row' }}>
-                    
+
                       <TextInput
                         style={{
                           flex: 8,
@@ -640,7 +545,7 @@ const SelectBase = ({ route }) => {
                       paddingBottom: 10
                     }}>
                     <View style={{ height: 30, flexDirection: 'row' }}>
-                    
+
                       <TextInput
                         style={{
                           flex: 8,
@@ -683,7 +588,7 @@ const SelectBase = ({ route }) => {
                       paddingBottom: 10
                     }}>
                     <View style={{ height: 30, flexDirection: 'row' }}>
-              
+
                       <TextInput
                         style={{
                           flex: 8,
@@ -733,7 +638,7 @@ const SelectBase = ({ route }) => {
                         flexDirection: 'column',
                         justifyContent: 'center',
                         height: 50,
-                        marginRight: 10, width: deviceWidth /4,
+                        marginRight: 10, width: deviceWidth / 4,
                         backgroundColor: Colors.buttonColorPrimary,
                       }}>
                       <Text
@@ -758,7 +663,7 @@ const SelectBase = ({ route }) => {
                           flexDirection: 'column',
                           justifyContent: 'center',
                           height: 50,
-                          width: deviceWidth /4,
+                          width: deviceWidth / 5,
                           backgroundColor: Colors.backgroundLoginColor,
                         }}>
                         <Text
@@ -783,7 +688,7 @@ const SelectBase = ({ route }) => {
                           flexDirection: 'column',
                           justifyContent: 'center',
                           height: 50,
-                          width: deviceWidth /4,
+                          width: deviceWidth / 5,
                           backgroundColor: '#979797',
                         }}>
                         <Text
@@ -835,21 +740,23 @@ const SelectBase = ({ route }) => {
             />
           </View>
         )}
-      
-    </View>
+
+      </View>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
   container1: {
-    backgroundColor: '#ffffff',
+    paddingTop:20,
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
+    flexDirection: 'column',
 
   },
   body: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20
+    width: deviceWidth / 2
   },
   body1e: {
 

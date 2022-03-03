@@ -161,38 +161,112 @@ const nextArchiveJob = ({ route }) => {
     };
 
     return (
-
-        <SafeAreaView style={container1}>
+        <>
             <StatusBar hidden={true} />
 
-            < >
+            <View style={tabbar}>
+                <View style={{ flexDirection: 'row' }}>
 
-                <View style={tabbar}>
-                    <View style={{ flexDirection: 'row' }}>
-
-                        <Text
-                            style={{
-                                marginLeft: 12,
-                                fontSize: FontSize.medium,
-                                color: Colors.backgroundLoginColorSecondary,
-                            }}> {route.params.name && (`${route.params.name}`)}</Text>
-                    </View>
-                    <View>
-
-                    </View>
-                    <TouchableOpacity
+                    <Text
+                        style={{
+                            marginLeft: 12,
+                            fontSize: FontSize.medium,
+                            fontWeight: 'bold',
+                            color: Colors.backgroundLoginColorSecondary,
+                        }}> {route.params.name && (`${route.params.name}`)}</Text>
+                </View>
+                <View>
+                    <TouchableNativeFeedback
                         onPress={() => navigation.goBack()}>
-                        <FontAwesome name="arrow-left" style={{ color: Colors.backgroundLoginColorSecondary, }} size={FontSize.large} />
-                    </TouchableOpacity>
+                        <View
+                            style={{
+                                borderRadius: 20,
+                                flexDirection: 'column',
+                                padding: 5,
+                                backgroundColor: 'red',
+                                width: deviceWidth / 6,
+                            }}>
+                            <Text
+                                style={{
+                                    color: Colors.buttonTextColor,
+                                    alignSelf: 'center',
+                                    fontSize: FontSize.medium,
+                                    fontWeight: 'bold',
+                                }}>
+                                {'ย้อนกลับ'}
+                            </Text>
+                        </View>
+                    </TouchableNativeFeedback>
                 </View>
 
+            </View>
+            <View style={{
+                justifyContent: 'flex-end',
+                flexDirection: 'row',
+            }}>
+                {/* <TouchableNativeFeedback
+                    onPress={() => navigation.goBack()}>
+                    <View
+                        style={{
+                            margin: 10,
+                            borderRadius: 20,
+                            flexDirection: 'column',
+                            padding: 10,
+                            backgroundColor: 'red',
+                            width: deviceWidth / 6,
+                        }}>
+                        <Text
+                            style={{
+                                color: Colors.buttonTextColor,
+                                alignSelf: 'center',
+                                fontSize: FontSize.medium,
+                                fontWeight: 'bold',
+                            }}>
+                            {'ย้อนกลับ'}
+                        </Text>
+                    </View>
+                </TouchableNativeFeedback> */}
+                {/* <TouchableNativeFeedback
+                    onPress={() => navigation.navigate('archiveJobInfo', { name: 'อ่านรายละเอียดงานจัดเก็บ', data: {} })}>
+                    <View
+                        style={{
+                            margin: 10,
+                            borderRadius: 20,
+                            padding: 10,
+                            backgroundColor: Colors.buttonColorPrimary,
+                            width: deviceWidth / 6,
+                        }}>
+                        <Text
+                            style={{
+                                color: Colors.buttonTextColor,
+                                alignSelf: 'center',
+                                fontSize: FontSize.medium,
+                                fontWeight: 'bold',
+                            }}>
+                            {'รายละเอียด'}
+                        </Text>
+                    </View>
+                </TouchableNativeFeedback> */}
+
+            </View>
+
+            <SafeAreaView style={{
+                flex: 1,
+            }}>
+
+
+
                 <ScrollView>
-                    <View style={{ padding: 20, marginTop: 0 }}>
-                        <View>
+                    <View style={container1}>
+                        <View width={deviceWidth / 2} style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignContent: 'center',
+                            }}>
                             < >
                                 <View style={{ marginTop: 10 }}>
                                     <Text style={styles.textTitle}>
-                                        SKM_TAG :
+                                        รหัสพาเล็ท :
                                     </Text>
                                 </View>
                                 <View style={{ marginTop: 10 }}>
@@ -202,14 +276,13 @@ const nextArchiveJob = ({ route }) => {
                                             flexDirection: 'column',
                                             borderWidth: 1,
                                             borderColor: Colors.buttonColorPrimary,
-                                            height: 50,
                                             borderRadius: 10,
                                             paddingLeft: 20,
                                             paddingRight: 20,
                                             paddingTop: 10,
                                             paddingBottom: 10,
                                         }}>
-                                        <View style={{ height: 30, flexDirection: 'row' }}>
+                                        <View style={{ flexDirection: 'row' }}>
                                             <TextInput
                                                 style={{
                                                     flex: 8,
@@ -221,7 +294,7 @@ const nextArchiveJob = ({ route }) => {
                                                     borderBottomWidth: 0.7,
                                                 }}
                                                 placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'SKM_TAG ..'}
+                                                placeholder={'รหัสพาเล็ท ..'}
                                                 value={''}
                                                 onChangeText={(val) => {
                                                     console.log(val)
@@ -229,7 +302,7 @@ const nextArchiveJob = ({ route }) => {
                                             <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
                                                 <FontAwesome
                                                     name="qrcode"
-                                                    size={25}
+                                                    size={FontSize.medium * 2}
                                                     color={Colors.buttonColorPrimary}
                                                 />
                                             </TouchableOpacity>
@@ -241,7 +314,7 @@ const nextArchiveJob = ({ route }) => {
                             < >
                                 <View style={{ marginTop: 10 }}>
                                     <Text style={styles.textTitle}>
-                                        SKU_CODE :
+                                        รหัสสินค้า :
                                     </Text>
                                 </View>
                                 <View style={{ marginTop: 10 }}>
@@ -251,14 +324,13 @@ const nextArchiveJob = ({ route }) => {
                                             flexDirection: 'column',
                                             borderWidth: 1,
                                             borderColor: Colors.buttonColorPrimary,
-                                            height: 50,
                                             borderRadius: 10,
                                             paddingLeft: 20,
                                             paddingRight: 20,
                                             paddingTop: 10,
                                             paddingBottom: 10,
                                         }}>
-                                        <View style={{ height: 30, flexDirection: 'row' }}>
+                                        <View style={{ flexDirection: 'row' }}>
                                             <TextInput
                                                 style={{
                                                     flex: 8,
@@ -270,7 +342,7 @@ const nextArchiveJob = ({ route }) => {
                                                     borderBottomWidth: 0.7,
                                                 }}
                                                 placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'SKU_CODE ..'}
+                                                placeholder={'รหัสสินค้า ..'}
                                                 value={''}
                                                 onChangeText={(val) => {
                                                     console.log(val)
@@ -283,7 +355,7 @@ const nextArchiveJob = ({ route }) => {
                             < >
                                 <View style={{ marginTop: 10 }}>
                                     <Text style={styles.textTitle}>
-                                        SKU_NAME :
+                                        ชื่อสินค้า :
                                     </Text>
                                 </View>
                                 <View style={{ marginTop: 10 }}>
@@ -293,14 +365,13 @@ const nextArchiveJob = ({ route }) => {
                                             flexDirection: 'column',
                                             borderWidth: 1,
                                             borderColor: Colors.buttonColorPrimary,
-                                            height: 50,
                                             borderRadius: 10,
                                             paddingLeft: 20,
                                             paddingRight: 20,
                                             paddingTop: 10,
                                             paddingBottom: 10,
                                         }}>
-                                        <View style={{ height: 30, flexDirection: 'row' }}>
+                                        <View style={{ flexDirection: 'row' }}>
                                             <TextInput
                                                 style={{
                                                     flex: 8,
@@ -312,7 +383,7 @@ const nextArchiveJob = ({ route }) => {
                                                     borderBottomWidth: 0.7,
                                                 }}
                                                 placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'SKU_NAME ..'}
+                                                placeholder={'ชื่อสินค้า ..'}
                                                 value={''}
                                                 onChangeText={(val) => {
                                                     console.log(val)
@@ -322,10 +393,10 @@ const nextArchiveJob = ({ route }) => {
                                     </View>
                                 </View>
                             </ >
-                            < >
+                            <>
                                 <View style={{ marginTop: 10 }}>
                                     <Text style={styles.textTitle}>
-                                        SKU_BARCODE :
+                                        รหัสตำแหน่งเก็บ :
                                     </Text>
                                 </View>
                                 <View style={{ marginTop: 10 }}>
@@ -335,14 +406,13 @@ const nextArchiveJob = ({ route }) => {
                                             flexDirection: 'column',
                                             borderWidth: 1,
                                             borderColor: Colors.buttonColorPrimary,
-                                            height: 50,
                                             borderRadius: 10,
                                             paddingLeft: 20,
                                             paddingRight: 20,
                                             paddingTop: 10,
                                             paddingBottom: 10,
                                         }}>
-                                        <View style={{ height: 30, flexDirection: 'row' }}>
+                                        <View style={{ flexDirection: 'row' }}>
                                             <TextInput
                                                 style={{
                                                     flex: 8,
@@ -350,11 +420,11 @@ const nextArchiveJob = ({ route }) => {
                                                     borderBottomColor: Colors.buttonColorPrimary,
                                                     color: Colors.fontColor,
                                                     paddingVertical: 3,
-                                                    fontSize: FontSize.medium,
+                                                    fontSize: FontSize.medium * 1.5,
                                                     borderBottomWidth: 0.7,
                                                 }}
                                                 placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'SKU_BARCODE ..'}
+                                                placeholder={'รหัสตำแหน่งเก็บ ..'}
                                                 value={''}
                                                 onChangeText={(val) => {
                                                     console.log(val)
@@ -363,158 +433,199 @@ const nextArchiveJob = ({ route }) => {
                                         </View>
                                     </View>
                                 </View>
-                            </ >
-                            < >
-                                <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.textTitle}>
-                                        KUTQQTY_NAME :
-                                    </Text>
-                                </View>
-                                <View style={{ marginTop: 10 }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: Colors.backgroundColorSecondary,
-                                            flexDirection: 'column',
-                                            borderWidth: 1,
-                                            borderColor: Colors.buttonColorPrimary,
-                                            height: 50,
-                                            borderRadius: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                        }}>
-                                        <View style={{ height: 30, flexDirection: 'row' }}>
-                                            <TextInput
-                                                style={{
-                                                    flex: 8,
-                                                    marginLeft: 10,
-                                                    borderBottomColor: Colors.buttonColorPrimary,
-                                                    color: Colors.fontColor,
-                                                    paddingVertical: 3,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'KUTQQTY_NAME ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
+                            </>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 4.2} style={{ paddingRight: 5 }}>
+                                    <View style={{ marginTop: 10 }}>
+                                        <Text style={styles.textTitle}>
+                                            รหัสบาร์โค้ด :
+                                        </Text>
+                                    </View>
+                                    <View style={{ marginTop: 10 }}>
+                                        <View
+                                            style={{
+                                                backgroundColor: Colors.backgroundColorSecondary,
+                                                flexDirection: 'column',
+                                                borderWidth: 1,
+                                                borderColor: Colors.buttonColorPrimary,
+                                                borderRadius: 10,
+                                                paddingLeft: 20,
+                                                paddingRight: 20,
+                                                paddingTop: 10,
+                                                paddingBottom: 10,
+                                            }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <TextInput
+                                                    style={{
+                                                        flex: 8,
+                                                        marginLeft: 10,
+                                                        borderBottomColor: Colors.buttonColorPrimary,
+                                                        color: Colors.fontColor,
+                                                        paddingVertical: 3,
+                                                        fontSize: FontSize.medium,
+                                                        borderBottomWidth: 0.7,
+                                                    }}
+                                                    placeholderTextColor={Colors.fontColorSecondary}
+                                                    placeholder={'รหัสบาร์โค้ด ..'}
+                                                    value={''}
+                                                    onChangeText={(val) => {
+                                                        console.log(val)
+                                                    }}></TextInput>
 
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            </ >
-                            < >
-                                <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.textTitle}>
-                                        SKM_QTY :
-                                    </Text>
-                                </View>
-                                <View style={{ marginTop: 10 }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: Colors.backgroundColorSecondary,
-                                            flexDirection: 'column',
-                                            borderWidth: 1,
-                                            borderColor: Colors.buttonColorPrimary,
-                                            height: 50,
-                                            borderRadius: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                        }}>
-                                        <View style={{ height: 30, flexDirection: 'row' }}>
-                                            <TextInput
-                                                style={{
-                                                    flex: 8,
-                                                    marginLeft: 10,
-                                                    borderBottomColor: Colors.buttonColorPrimary,
-                                                    color: Colors.fontColor,
-                                                    paddingVertical: 3,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'SKM_QTY ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
+                                </ View>
+                                < View width={deviceWidth / 4.2} style={{ paddingLeft: 5 }}>
+                                    <View style={{ marginTop: 10 }}>
+                                        <Text style={styles.textTitle}>
+                                            ชื่อหน่วยนับ :
+                                        </Text>
+                                    </View>
+                                    <View style={{ marginTop: 10 }}>
+                                        <View
+                                            style={{
+                                                backgroundColor: Colors.backgroundColorSecondary,
+                                                flexDirection: 'column',
+                                                borderWidth: 1,
+                                                borderColor: Colors.buttonColorPrimary,
+                                                borderRadius: 10,
+                                                paddingLeft: 20,
+                                                paddingRight: 20,
+                                                paddingTop: 10,
+                                                paddingBottom: 10,
+                                            }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <TextInput
+                                                    style={{
+                                                        flex: 8,
+                                                        marginLeft: 10,
+                                                        borderBottomColor: Colors.buttonColorPrimary,
+                                                        color: Colors.fontColor,
+                                                        paddingVertical: 3,
+                                                        fontSize: FontSize.medium,
+                                                        borderBottomWidth: 0.7,
+                                                    }}
+                                                    placeholderTextColor={Colors.fontColorSecondary}
+                                                    placeholder={'ชื่อหน่วยนับ ..'}
+                                                    value={''}
+                                                    onChangeText={(val) => {
+                                                        console.log(val)
+                                                    }}></TextInput>
 
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            </ >
-                            < >
-                                <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.textTitle}>
-                                        WL_CODE :
-                                    </Text>
-                                </View>
-                                <View style={{ marginTop: 10 }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: Colors.backgroundColorSecondary,
-                                            flexDirection: 'column',
-                                            borderWidth: 1,
-                                            borderColor: Colors.buttonColorPrimary,
-                                            height: 50,
-                                            borderRadius: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                        }}>
-                                        <View style={{ height: 30, flexDirection: 'row' }}>
-                                            <TextInput
-                                                style={{
-                                                    flex: 8,
-                                                    marginLeft: 10,
-                                                    borderBottomColor: Colors.buttonColorPrimary,
-                                                    color: Colors.fontColor,
-                                                    paddingVertical: 3,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'WL_CODE ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
+                                </View >
+                            </View>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 4.2} style={{ paddingRight: 5 }}>
 
+                                    <View style={{ marginTop: 10 }}>
+                                        <Text style={styles.textTitle}>
+                                            จำนวนชิ้น :
+                                        </Text>
+                                    </View>
+                                    <View style={{ marginTop: 10 }}>
+                                        <View
+                                            style={{
+                                                backgroundColor: Colors.backgroundColorSecondary,
+                                                flexDirection: 'column',
+                                                borderWidth: 1,
+                                                borderColor: Colors.buttonColorPrimary,
+                                                borderRadius: 10,
+                                                paddingLeft: 20,
+                                                paddingRight: 20,
+                                                paddingTop: 10,
+                                                paddingBottom: 10,
+                                            }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <TextInput
+                                                    style={{
+                                                        flex: 8,
+                                                        marginLeft: 10,
+                                                        borderBottomColor: Colors.buttonColorPrimary,
+                                                        color: Colors.fontColor,
+                                                        paddingVertical: 3,
+                                                        fontSize: FontSize.medium,
+                                                        borderBottomWidth: 0.7,
+                                                    }}
+                                                    placeholderTextColor={Colors.fontColorSecondary}
+                                                    placeholder={'จำนวนชิ้น ..'}
+                                                    value={''}
+                                                    onChangeText={(val) => {
+                                                        console.log(val)
+                                                    }}></TextInput>
+
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            </ >
-                            <TouchableNativeFeedback
-                                onPress={() => navigation.navigate('archiveJobInfo', { name: 'อ่านรายละเอียดงานจัดเก็บ', data: {} })}>
-                                <View
-                                    style={{
-                                        margin: 10,
-                                        borderRadius: 20,
-                                        flexDirection: 'column',
-                                        padding: 10,
-                                        backgroundColor: Colors.buttonColorPrimary,
-                                    }}>
-                                    <Text
-                                        style={{
-                                            color: Colors.buttonTextColor,
-                                            alignSelf: 'center',
-                                            fontSize: FontSize.medium,
-                                            fontWeight: 'bold',
-                                        }}>
-                                        {'อ่านรายละเอียดงานจัดเก็บ'}
-                                    </Text>
-                                </View>
-                            </TouchableNativeFeedback>
+                                </View >
+                                <View width={deviceWidth / 4.2} style={{ paddingLeft: 5 }}>
+
+                                </ View>
+                            </View>
+
+
                         </View>
-                    </View>
+                    </ View>
                 </ScrollView>
-            </ >
+
+
+
+
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 20,
+
+                }}>
+
+                    <TouchableNativeFeedback
+                        style={{
+                            marginRight: 20,
+                            marginBottom: 20,
+                            borderRadius: deviceWidth / 6,
+                            padding: 10,
+                            width: deviceWidth / 6,
+                            height: deviceWidth / 6,
+
+
+                        }}
+                        onPress={() => navigation.navigate('saveArchiveJobInfo', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: {} })}>
+                        <View
+                            style={{
+                                width: deviceWidth / 4,
+                                height: deviceWidth / 12,
+                                justifyContent: 'center',
+                                margin: 10,
+                                borderRadius: 20,
+                                flexDirection: 'column',
+                                padding: 10,
+                                backgroundColor: Colors.buttonColorPrimary,
+                            }}>
+                            <Text
+                                style={{
+                                    color: Colors.buttonTextColor,
+                                    alignSelf: 'center',
+                                    fontSize: FontSize.large,
+                                    fontWeight: 'bold',
+                                }}>
+                                {'รับงาน'}
+                            </Text>
+                        </View>
+                    </TouchableNativeFeedback>
+
+                </View>
+
+            </SafeAreaView>
 
             {loading && (
                 <View
@@ -542,15 +653,13 @@ const nextArchiveJob = ({ route }) => {
                     />
                 </View>
             )}
-
-
-        </SafeAreaView>
+        </>
     );
 };
 
 const styles = StyleSheet.create({
     container1: {
-
+        alignItems: 'center',
         flex: 1,
         flexDirection: 'column',
     },
@@ -575,9 +684,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
-    textTitle2: {
-        alignSelf: 'center',
-        flex: 2,
+    textTitle: {
         fontSize: FontSize.medium,
         fontWeight: 'bold',
         color: Colors.fontColor,

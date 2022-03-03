@@ -13,7 +13,6 @@ import {
   Platform,
   BackHandler,
   StatusBar,
-
   ScrollView,
   TouchableNativeFeedback,
   TouchableOpacity,
@@ -22,31 +21,16 @@ import {
 import CheckBox from '@react-native-community/checkbox';
 import DeviceInfo from 'react-native-device-info';
 import { NetworkInfo } from "react-native-network-info";
-
-
-
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-
 import { useStateIfMounted } from 'use-state-if-mounted';
-
-
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-
-
 import { useSelector, connect, useDispatch } from 'react-redux';
-
-
-
 import { Language, changeLanguage } from '../translations/I18n';
 import { FontSize } from '../components/FontSizeHelper';
-
-
 import * as loginActions from '../src/actions/loginActions';
 import * as registerActions from '../src/actions/registerActions';
 import * as databaseActions from '../src/actions/databaseActions';
-
 import Colors from '../src/Colors';
 import { fontSize, fontWeight } from 'styled-system';
 
@@ -93,7 +77,7 @@ const LoginScreen = () => {
   const [data, setData] = useStateIfMounted({
     secureTextEntry: true,
   });
- 
+
   useEffect(() => {
     console.log('>> isSFeatures : ', isSFeatures)
     if (registerReducer.machineNum.length == 0)
@@ -152,7 +136,7 @@ const LoginScreen = () => {
   const tslogin = async () => {
     navigation.navigate('MainScreen')
     // await setLoading(true)
-   
+
     // await regisMacAdd()
     // await setLoading(false)
   }
@@ -263,189 +247,201 @@ const LoginScreen = () => {
       });
     setLoading(false)
   };
- 
 
- 
+
+
 
   return (
+    <>
+      <View style={tabbar}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SelectScreen', { data: '' })}>
+          <FontAwesomeIcon name="gear" size={30} color={Colors.fontColor} />
+        </TouchableOpacity>
+        <Text
+          style={{
+            marginLeft: 12,
+            fontSize: FontSize.medium,
+            color: Colors.backgroundLoginColorSecondary,
+          }}></Text>
+      </View>
 
-    <SafeAreaView style={container1}>
-      <StatusBar hidden={true} />
-   
-          <ScrollView>
-             <View style={tabbar}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('SelectScreen', { data: '' })}>
-                  <FontAwesomeIcon name="gear" size={30} color={Colors.fontColor} />
-                </TouchableOpacity>
-                <Text
+      <SafeAreaView style={container1}>
+
+        <StatusBar hidden={true} />
+
+        <ScrollView>
+
+
+          <KeyboardAvoidingView keyboardVerticalOffset={1} behavior={'position'}>
+            <View style={{
+              padding: 20,   width: deviceWidth / 2,
+            }}>
+              <View>
+              <TouchableNativeFeedback>
+                <Image
+                  style={topImage}
+                  resizeMode={'contain'}
+                  source={require('../img/2.5.png')}
+                />
+              </TouchableNativeFeedback>
+                <View
                   style={{
-                    marginLeft: 12,
-                    fontSize: FontSize.medium,
-                    color: Colors.backgroundLoginColorSecondary,
-                  }}></Text>
+                    backgroundColor: Colors.backgroundLoginColorSecondary,
+                    flexDirection: 'column',
+                    borderRadius: 10,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    shadowColor: Colors.borderColor,
+                    shadowOffset: {
+                      width: 0,
+                      height: 6,
+                    },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 1.0,
+                    elevation: 15,
+                  }}>
+                  <View style={{ height: 40, flexDirection: 'row', alignItems: 'center' }}>
+                    <FontAwesomeIcon
+                      name="user"
+                      size={25}
+                      color={Colors.buttonColorPrimary}
+                    />
+                    <TextInput
+                      style={{
+                        flex: 8,
+                        marginLeft: 10,
+                        borderBottomColor: Colors.buttonColorPrimary,
+                        color: Colors.fontColor,
+                        paddingVertical: 7,
+                        fontSize: FontSize.medium,
+                        borderBottomWidth: 0.7,
+                      }}
+
+                      placeholderTextColor={Colors.fontColorSecondary}
+                      value={username}
+                      maxLength={10}
+                      placeholder={Language.t('login.username')}
+                      onChangeText={(val) => {
+                        setUsername(val);
+                      }} />
+                  </View>
+                </View>
               </View>
 
-            <KeyboardAvoidingView keyboardVerticalOffset={1} behavior={'position'}>
-              <View style={{ padding: 20, marginTop: deviceHeight / 2.3 }}>
-                <View>
-                  <View
-                    style={{
-                      backgroundColor: Colors.backgroundLoginColorSecondary,
-                      flexDirection: 'column',
-                      borderRadius: 10,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                      shadowColor: Colors.borderColor,
-                      shadowOffset: {
-                        width: 0,
-                        height: 6,
-                      },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 1.0,
-                      elevation: 15,
-                    }}>
-                    <View style={{ height: 40, flexDirection: 'row',alignItems:'center' }}>
-                    <FontAwesomeIcon
-                            name="user"
-                            size={25}
-                            color={Colors.buttonColorPrimary}
-                          />
-                      <TextInput
-                        style={{
-                          flex: 8,
-                          marginLeft: 10,
-                          borderBottomColor: Colors.buttonColorPrimary,
-                          color: Colors.fontColor,
-                          paddingVertical: 7,
-                          fontSize: FontSize.medium,
-                          borderBottomWidth: 0.7,
-                        }}
+              <View style={{ marginTop: 10 }}>
+                <View
+                  style={{
+                    backgroundColor: Colors.backgroundLoginColorSecondary,
+                    flexDirection: 'column',
 
-                        placeholderTextColor={Colors.fontColorSecondary}
-                        value={username}
-                        maxLength={10}
-                        placeholder={Language.t('login.username')}
-                        onChangeText={(val) => {
-                          setUsername(val);
-                        }}/>
-                    </View>
+                    borderRadius: 10,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+
+                    shadowColor: Colors.borderColor,
+                    shadowOffset: {
+                      width: 0,
+                      height: 6,
+                    },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 1.0,
+
+                    elevation: 15,
+                  }}>
+
+                  <View style={{ height: 40, flexDirection: 'row', alignItems: 'center' }}>
+                    <FontAwesomeIcon
+                      name="lock"
+                      size={25}
+                      color={Colors.buttonColorPrimary}
+                    />
+                    <TextInput
+                      style={{
+                        flex: 8,
+                        marginLeft: 10,
+                        color: Colors.fontColor,
+                        paddingVertical: 7,
+                        fontSize: FontSize.medium,
+                        borderBottomColor: Colors.buttonColorPrimary,
+                        borderBottomWidth: 0.7,
+                      }}
+                      secureTextEntry={data.secureTextEntry ? true : false}
+                      keyboardType="default"
+                      maxLength={8}
+                      value={password}
+                      placeholderTextColor={Colors.fontColorSecondary}
+                      placeholder={Language.t('login.password')}
+                      onChangeText={(val) => {
+                        setPassword(val);
+                      }}
+                    />
+
+                    <TouchableOpacity onPress={updateSecureTextEntry}>
+                      {data.secureTextEntry ? (
+                        <FontAwesomeIcon
+                          name="eye-slash"
+                          size={25}
+                          color={Colors.buttonColorPrimary}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          name="eye"
+                          size={25}
+                          color={Colors.buttonColorPrimary} />
+                      )}
+                    </TouchableOpacity>
                   </View>
                 </View>
+              </View>
+              <View style={styles.checkboxContainer} >
+                <View></View>
+                <CheckBox
+                  value={isSelected}
+                  onValueChange={(value) => setSelection(value)}
 
-                <View style={{ marginTop: 10 }}>
-                  <View
-                    style={{
-                      backgroundColor: Colors.backgroundLoginColorSecondary,
-                      flexDirection: 'column',
-
-                      borderRadius: 10,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      paddingTop: 10,
-                      paddingBottom: 10,
-
-                      shadowColor: Colors.borderColor,
-                      shadowOffset: {
-                        width: 0,
-                        height: 6,
-                      },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 1.0,
-
-                      elevation: 15,
-                    }}>
-
-                    <View style={{ height: 40, flexDirection: 'row',alignItems:'center' }}>
-                    <FontAwesomeIcon
-                            name="lock"
-                            size={25}
-                            color={Colors.buttonColorPrimary}
-                          />
-                      <TextInput
+                  tintColors={{ true: Colors.fontColor, false: Colors.fontColor }}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.label} onPress={() => setSelection(!isSelected)}>{Language.t('login.rememberpassword')}</Text>
+              </View>
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'column',
+                  }}>
+                  <TouchableNativeFeedback
+                    onPress={() => tslogin()}>
+                    <View
+                      style={{
+                        borderRadius: 20,
+                        flexDirection: 'column',
+                        padding: 20,
+                        backgroundColor: Colors.buttonColorPrimary,
+                      }}>
+                      <Text
                         style={{
-                          flex: 8,
-                          marginLeft: 10,
-                          color: Colors.fontColor,
-                          paddingVertical: 7,
+                          color: Colors.buttonTextColor,
+                          alignSelf: 'center',
                           fontSize: FontSize.medium,
-                          borderBottomColor: Colors.buttonColorPrimary,
-                          borderBottomWidth: 0.7,
-                        }}
-                        secureTextEntry={data.secureTextEntry ? true : false}
-                        keyboardType="default"
-                        maxLength={8}
-                        value={password}
-                        placeholderTextColor={Colors.fontColorSecondary}
-                        placeholder={Language.t('login.password')}
-                        onChangeText={(val) => {
-                          setPassword(val);
-                        }}
-                      />
-
-                      <TouchableOpacity onPress={updateSecureTextEntry}>
-                        {data.secureTextEntry ? (
-                          <FontAwesomeIcon
-                            name="eye-slash"
-                            size={25}
-                            color={Colors.buttonColorPrimary}
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            name="eye"
-                            size={25}
-                            color={Colors.buttonColorPrimary}/>
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.checkboxContainer} >
-                  <View></View>
-                  <CheckBox
-                    value={isSelected}
-                    onValueChange={(value) => setSelection(value)}
-
-                    tintColors={{ true: Colors.fontColor, false: Colors.fontColor }}
-                    style={styles.checkbox}
-                  />
-                  <Text style={styles.label} onPress={()=>setSelection(!isSelected)}>{Language.t('login.rememberpassword')}</Text>
-                </View>
-                <View>
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                    }}>
-                    <TouchableNativeFeedback
-                      onPress={() => tslogin()}>
-                      <View
-                        style={{
-                          borderRadius: 20,
-                          flexDirection: 'column',
-                          padding: 20,
-                          backgroundColor: Colors.buttonColorPrimary,
+                          fontWeight: 'bold',
                         }}>
-                        <Text
-                          style={{
-                            color: Colors.buttonTextColor,
-                            alignSelf: 'center',
-                            fontSize: FontSize.medium,
-                            fontWeight: 'bold',
-                          }}>
-                          {Language.t('login.buttonLogin')}
-                        </Text>
-                      </View>
-                    </TouchableNativeFeedback>
-                  </View>
-
+                        {Language.t('login.buttonLogin')}
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
                 </View>
+
               </View>
+            </View>
 
-            </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
 
-          </ScrollView>
+        </ScrollView>
         {loading && (
           <View
             style={{
@@ -472,14 +468,16 @@ const LoginScreen = () => {
             />
           </View>
         )}
-      
-    </SafeAreaView>
+
+      </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container1: {
-
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
   },
@@ -502,7 +500,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  textTitle2: {
+  textTitle: {
     alignSelf: 'center',
     flex: 2,
     fontSize: FontSize.medium,
@@ -517,7 +515,7 @@ const styles = StyleSheet.create({
   },
   topImage: {
     width: null,
-    height: deviceWidth / 2,
+    height: 200,
 
   },
   button: {

@@ -161,37 +161,38 @@ const MainScreen = () => {
   };
 
   return (
-
-    <SafeAreaView style={container1}>
-      <StatusBar hidden={true} />
-
-      < >
-
-        <View style={tabbar}>
+<>
+<StatusBar hidden={true} />
+<View style={tabbar}>
           <View style={{ flexDirection: 'row' }}>
 
             <Text
               style={{
                 marginLeft: 12,
                 fontSize: FontSize.medium,
+                fontWeight: 'bold',
                 color: Colors.backgroundLoginColorSecondary,
               }}> {`ระบบการจัดการคลังสินค้า`}</Text>
           </View>
           <View>
 
           </View>
-           <TouchableOpacity
-            onPress={() => navigation.goBack()}>
-            <FontAwesome name="power-off" style={{ color: Colors.backgroundLoginColorSecondary, }} size={FontSize.large} />
-          </TouchableOpacity>
+            
         </View>
+    <SafeAreaView>
+     
+
+      < >
+
+ 
 
         <ScrollView>
-          <View style={{ padding: 20, marginTop: 0 }}>
-            <View>
+          <View  style={container1}>
+            <View style={{marginTop:deviceWidth/10}}></View>
+            <View width={deviceWidth/2} >
               <TouchableOpacity
 
-                onPress={() => navigation.navigate('nextArchiveJob', { name: 'แสดงงานจัดเก็บถัดไป', data: '' })}
+                onPress={() => navigation.navigate('nextArchiveJob', { name: 'Put-away', data: '' })}
                 style={{
                   backgroundColor: Colors.backgroundLoginColorSecondary,
                   flexDirection: 'column',
@@ -216,46 +217,15 @@ const MainScreen = () => {
                     <Text style={{
                       color: 'black',
                       alignSelf: 'center',
-                      fontSize: FontSize.medium,
+                      fontSize: FontSize.large,
                       fontWeight: 'bold'
-                    }}>แสดงงานจัดเก็บถัดไป</Text>
+                    }}>Put-away</Text>
                   </View>
                 </View>
               </TouchableOpacity>
+          
               <TouchableOpacity
-                onPress={() => navigation.navigate('archiveJobInfo', { name: 'อ่านรายละเอียดงานจัดเก็บ', data: {} })}
-                style={{ 
-                  backgroundColor: Colors.backgroundLoginColorSecondary,
-                  flexDirection: 'column',
-                  margin: 10,
-                  borderRadius: 10,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  shadowColor: Colors.borderColor,
-                  shadowOffset: {
-                    width: 0,
-                    height: 6,
-                  },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 1.0,
-                  elevation: 15,
-                }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                  <View style={{ marginLeft: 20 }}>
-                    <Text style={{
-                      color: 'black',
-                      alignSelf: 'center',
-                      fontSize: FontSize.medium,
-                      fontWeight: 'bold'
-                    }}>อ่านรายละเอียดงานจัดเก็บ</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('nextDelivery', { name: 'แสดงงานส่งมอบถัดไป', data: {} })}
+                onPress={() => navigation.navigate('nextDelivery', { name: 'Picking', data: {} })}
                 style={{
                   backgroundColor: Colors.backgroundLoginColorSecondary,
                   flexDirection: 'column',
@@ -280,44 +250,13 @@ const MainScreen = () => {
                     <Text style={{
                       color: 'black',
                       alignSelf: 'center',
-                      fontSize: FontSize.medium,
+                      fontSize: FontSize.large,
                       fontWeight: 'bold'
-                    }}>แสดงงานส่งมอบถัดไป</Text>
+                    }}>Picking</Text>
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('deliveryInfo', { name: 'อ่านรายละเอียดงานส่งมอบ', data: {} })}
-                style={{
-                  backgroundColor: Colors.backgroundLoginColorSecondary,
-                  flexDirection: 'column',
-                  margin: 10,
-                  borderRadius: 10,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  shadowColor: Colors.borderColor,
-                  shadowOffset: {
-                    width: 0,
-                    height: 6,
-                  },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 1.0,
-                  elevation: 15,
-                }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                  <View style={{ marginLeft: 20 }}>
-                    <Text style={{
-                      color: 'black',
-                      alignSelf: 'center',
-                      fontSize: FontSize.medium,
-                      fontWeight: 'bold'
-                    }}>อ่านรายละเอียดงานส่งมอบ</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
+            
 
               <TouchableNativeFeedback
                 onPress={() => logOut()}>
@@ -327,13 +266,13 @@ const MainScreen = () => {
                     borderRadius: 20,
                     flexDirection: 'column',
                     padding: 10,
-                    backgroundColor: Colors.buttonColorPrimary,
+                    backgroundColor: 'red',
                   }}>
                   <Text
                     style={{
                       color: Colors.buttonTextColor,
                       alignSelf: 'center',
-                      fontSize: FontSize.medium,
+                      fontSize: FontSize.large,
                       fontWeight: 'bold',
                     }}>
                     {'ออกจากระบบ'}
@@ -341,6 +280,7 @@ const MainScreen = () => {
                 </View>
               </TouchableNativeFeedback>
             </View>
+          <></>
           </View>
         </ScrollView>
       </ >
@@ -374,14 +314,18 @@ const MainScreen = () => {
 
 
     </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container1: {
-
+    paddingTop:20,
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
+
   },
   image: {
     flex: 1,
@@ -404,7 +348,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  textTitle2: {
+  textTitle: {
     alignSelf: 'center',
     flex: 2,
     fontSize: FontSize.medium,

@@ -48,7 +48,7 @@ import * as registerActions from '../../src/actions/registerActions';
 import * as databaseActions from '../../src/actions/databaseActions';
 
 import Colors from '../../src/Colors';
-import { fontSize, fontWeight } from 'styled-system';
+import { borderColor, fontSize, fontWeight } from 'styled-system';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -198,52 +198,40 @@ const nextDelivery = ({ route }) => {
                         </View>
                     </TouchableNativeFeedback>
                 </View>
-
             </View>
-
-
-
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
                 <ScrollView>
                     < View style={container1} >
-
                         <View width={deviceWidth / 2} style={{
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignContent: 'center',
                         }}>
-                            < >
-                                <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.textTitle}>
-                                        รหัสพาเล็ท :
-                                    </Text>
-                                </View>
-                                <View style={{ marginTop: 10 }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: Colors.backgroundColorSecondary,
-                                            flexDirection: 'column',
-                                            borderWidth: 1,
-                                            borderColor: Colors.buttonColorPrimary,
-                                            borderRadius: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                        }}>
+                            <View style={{
+                                paddingTop: 10,
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, }}>
+                                        <Text style={styles.textTitle}>
+                                            ตำแหน่งเก็บ :
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{}}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <TextInput
+                                                width={deviceWidth / 3.5}
                                                 style={{
-                                                    flex: 8,
-                                                    marginLeft: 10,
                                                     borderBottomColor: Colors.buttonColorPrimary,
                                                     color: Colors.fontColor,
-                                                    paddingVertical: 3,
                                                     fontSize: FontSize.medium,
                                                     borderBottomWidth: 0.7,
                                                 }}
                                                 placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'รหัสพาเล็ท ..'}
+                                                placeholder={'ตำแหน่งเก็บ ..'}
                                                 value={''}
                                                 onChangeText={(val) => {
                                                     console.log(val)
@@ -255,285 +243,151 @@ const nextDelivery = ({ route }) => {
                                                     color={Colors.buttonColorPrimary}
                                                 />
                                             </TouchableOpacity>
-
-                                        </View>
-                                    </View>
-                                </View>
-                            </ >
-                            < >
-                                <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.textTitle}>
-                                        รหัสสินค้า :
-                                    </Text>
-                                </View>
-                                <View style={{ marginTop: 10 }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: Colors.backgroundColorSecondary,
-                                            flexDirection: 'column',
-                                            borderWidth: 1,
-                                            borderColor: Colors.buttonColorPrimary,
-                                            borderRadius: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                        }}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TextInput
-                                                style={{
-                                                    flex: 8,
-                                                    marginLeft: 10,
-                                                    borderBottomColor: Colors.buttonColorPrimary,
-                                                    color: Colors.fontColor,
-                                                    paddingVertical: 3,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'รหัสสินค้า ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
-
-                                        </View>
-                                    </View>
-                                </View>
-                            </ >
-                            < >
-                                <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.textTitle}>
-                                        ชื่อสินค้า :
-                                    </Text>
-                                </View>
-                                <View style={{ marginTop: 10 }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: Colors.backgroundColorSecondary,
-                                            flexDirection: 'column',
-                                            borderWidth: 1,
-                                            borderColor: Colors.buttonColorPrimary,
-                                            borderRadius: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                        }}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TextInput
-                                                style={{
-                                                    flex: 8,
-                                                    marginLeft: 10,
-                                                    borderBottomColor: Colors.buttonColorPrimary,
-                                                    color: Colors.fontColor,
-                                                    paddingVertical: 3,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'ชื่อสินค้า ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
-
-                                        </View>
-                                    </View>
-                                </View>
-                            </ >
-                            <>
-                                <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.textTitle}>
-                                        รหัสตำแหน่งเก็บ :
-                                    </Text>
-                                </View>
-                                <View style={{ marginTop: 10 }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: Colors.backgroundColorSecondary,
-                                            flexDirection: 'column',
-                                            borderWidth: 1,
-                                            borderColor: Colors.buttonColorPrimary,
-                                            borderRadius: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                        }}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TextInput
-                                                style={{
-                                                    flex: 8,
-                                                    marginLeft: 10,
-                                                    borderBottomColor: Colors.buttonColorPrimary,
-                                                    color: Colors.fontColor,
-                                                    paddingVertical: 3,
-                                                    fontSize: FontSize.medium * 1.5,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.fontColorSecondary}
-                                                placeholder={'รหัสตำแหน่งเก็บ ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
-
-                                        </View>
-                                    </View>
-                                </View>
-                            </>
-                            <View style={{
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-                            }}>
-                                <View width={deviceWidth / 4.2}>
-                                    <View style={{ marginTop: 10 }}>
-                                        <Text style={styles.textTitle}>
-                                            รหัสบาร์โค้ด :
-                                        </Text>
-                                    </View>
-                                    <View style={{ marginTop: 10 }}>
-                                        <View
-                                            style={{
-                                                backgroundColor: Colors.backgroundColorSecondary,
-                                                flexDirection: 'column',
-                                                borderWidth: 1,
-                                                borderColor: Colors.buttonColorPrimary,
-                                                borderRadius: 10,
-                                                paddingLeft: 20,
-                                                paddingRight: 20,
-                                                paddingTop: 10,
-                                                paddingBottom: 10,
-                                            }}>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <TextInput
-                                                    style={{
-                                                        flex: 8,
-                                                        marginLeft: 10,
-                                                        borderBottomColor: Colors.buttonColorPrimary,
-                                                        color: Colors.fontColor,
-                                                        paddingVertical: 3,
-                                                        fontSize: FontSize.medium,
-                                                        borderBottomWidth: 0.7,
-                                                    }}
-                                                    placeholderTextColor={Colors.fontColorSecondary}
-                                                    placeholder={'รหัสบาร์โค้ด ..'}
-                                                    value={''}
-                                                    onChangeText={(val) => {
-                                                        console.log(val)
-                                                    }}></TextInput>
-
-                                            </View>
-                                        </View>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 4.2}>
-                                    <View style={{ marginTop: 10 }}>
-                                        <Text style={styles.textTitle}>
-                                            ชื่อหน่วยนับ :
-                                        </Text>
-                                    </View>
-                                    <View style={{ marginTop: 10 }}>
-                                        <View
-                                            style={{
-                                                backgroundColor: Colors.backgroundColorSecondary,
-                                                flexDirection: 'column',
-                                                borderWidth: 1,
-                                                borderColor: Colors.buttonColorPrimary,
-                                                borderRadius: 10,
-                                                paddingLeft: 20,
-                                                paddingRight: 20,
-                                                paddingTop: 10,
-                                                paddingBottom: 10,
-                                            }}>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <TextInput
-                                                    style={{
-                                                        flex: 8,
-                                                        marginLeft: 10,
-                                                        borderBottomColor: Colors.buttonColorPrimary,
-                                                        color: Colors.fontColor,
-                                                        paddingVertical: 3,
-                                                        fontSize: FontSize.medium,
-                                                        borderBottomWidth: 0.7,
-                                                    }}
-                                                    placeholderTextColor={Colors.fontColorSecondary}
-                                                    placeholder={'ชื่อหน่วยนับ ..'}
-                                                    value={''}
-                                                    onChangeText={(val) => {
-                                                        console.log(val)
-                                                    }}></TextInput>
-
-                                            </View>
                                         </View>
                                     </View>
                                 </View >
                             </View>
                             <View style={{
+                                paddingTop: 10,
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 4.2}>
-
-                                    <View style={{ marginTop: 10 }}>
+                                <View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
                                         <Text style={styles.textTitle}>
-                                            จำนวนชิ้น :
+                                            บล๊อค
                                         </Text>
                                     </View>
-                                    <View style={{ marginTop: 10 }}>
-                                        <View
-                                            style={{
-                                                backgroundColor: Colors.backgroundColorSecondary,
-                                                flexDirection: 'column',
-                                                borderWidth: 1,
-                                                borderColor: Colors.buttonColorPrimary,
-                                                borderRadius: 10,
-                                                paddingLeft: 20,
-                                                paddingRight: 20,
-                                                paddingTop: 10,
-                                                paddingBottom: 10,
-                                            }}>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <TextInput
-                                                    style={{
-                                                        flex: 8,
-                                                        marginLeft: 10,
-                                                        borderBottomColor: Colors.buttonColorPrimary,
-                                                        color: Colors.fontColor,
-                                                        paddingVertical: 3,
-                                                        fontSize: FontSize.medium,
-                                                        borderBottomWidth: 0.7,
-                                                    }}
-                                                    placeholderTextColor={Colors.fontColorSecondary}
-                                                    placeholder={'จำนวนชิ้น ..'}
-                                                    value={''}
-                                                    onChangeText={(val) => {
-                                                        console.log(val)
-                                                    }}></TextInput>
-
-                                            </View>
-                                        </View>
+                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                        <Text style={styles.textTitle}>
+                                            xxx
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                        <Text style={styles.textTitle}>
+                                            แถว
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                        <Text style={styles.textTitle}>
+                                            xxx
+                                        </Text>
                                     </View>
                                 </View >
-                                <View width={deviceWidth / 4.2}>
-
-                                </ View>
+                                < View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                        <Text style={styles.textTitle}>
+                                            ชั้น
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                        <Text style={styles.textTitle}>
+                                            xxx
+                                        </Text>
+                                    </View>
+                                </View >
                             </View>
-
-
+                            <View style={{
+                                paddingTop: 10,
+                                justifyContent: 'space-between',
+                                flexDirection: 'row', borderColor: Colors.buttonColorPrimary, borderWidth: 1
+                            }}>
+                                <View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, }}>
+                                        <Text style={styles.textTitle}>
+                                            รหัสสินค้า :
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{ padding: 10, }}>
+                                        <Text style={styles.textTitle}>
+                                            xxxxx
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                            <View style={{
+                                paddingTop: 10,
+                                justifyContent: 'space-between',
+                                flexDirection: 'row', borderColor: Colors.buttonColorPrimary, borderWidth: 1
+                            }}>
+                                <View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, }}>
+                                        <Text style={styles.textTitle}>
+                                            ชื่อสินค้า :
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{ padding: 10, }}>
+                                        <Text style={styles.textTitle}>
+                                            xxxxxx
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
                         </View>
-                    </ View>
+                        <View style={{
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                        }}>
+                            <View width={deviceWidth / 4} >
+                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                    <Text style={styles.textTitle}>
+                                        หน่วย
+                                    </Text>
+                                </View>
+                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                    <Text style={styles.textTitle}>
+                                        xxxx
+                                    </Text>
+                                </View>
+                            </ View>
+                            < View width={deviceWidth / 4}>
+                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                    <Text style={styles.textTitle}>
+                                        จำนวน
+                                    </Text>
+                                </View>
+                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
+                                    <Text style={styles.textTitle}>
+                                        xxxxx
+                                    </Text>
+                                </View>
+                            </View >
+                        </View>
+                    </View>
                 </ScrollView>
-
+                <View style={{     alignItems:'center',}}>
                 <View style={{
                     flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+               
+                    justifyContent: 'space-between',
+                  width:deviceWidth/2,
+                 
+
                     marginTop: 20,
-
                 }}>
-
+                <View style={{  flexDirection: 'row'}}>
+                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
+                        <FontAwesome
+                            name="caret-left"
+                            size={deviceWidth / 8}
+                            color={Colors.fontColor}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
+                        <FontAwesome
+                            name="caret-right"
+                            size={deviceWidth / 8}
+                            color={Colors.fontColor}
+                        />
+                    </TouchableOpacity>
+                </View>
+               
                     <TouchableNativeFeedback
                         style={{
                             marginRight: 20,
@@ -541,9 +395,7 @@ const nextDelivery = ({ route }) => {
                             borderRadius: deviceWidth / 6,
                             padding: 10,
                             width: deviceWidth / 6,
-                            height: deviceWidth / 6,
-
-
+                            height: deviceWidth / 6
                         }}
                         onPress={() => navigation.navigate('saveDeliveryInfo', { name: 'บันทึกรายละเอียดงานส่งมอบ', data: {} })}>
                         <View
@@ -568,10 +420,9 @@ const nextDelivery = ({ route }) => {
                             </Text>
                         </View>
                     </TouchableNativeFeedback>
-
                 </View>
-
-
+                </View>
+             
                 {loading && (
                     <View
                         style={{
@@ -598,8 +449,6 @@ const nextDelivery = ({ route }) => {
                         />
                     </View>
                 )}
-
-
             </SafeAreaView>
         </>
     );
@@ -607,7 +456,7 @@ const nextDelivery = ({ route }) => {
 
 const styles = StyleSheet.create({
     container1: {
-
+        backgroundColor: '#fff',
         alignItems: 'center',
         flex: 1,
         flexDirection: 'column',
@@ -629,7 +478,6 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         alignItems: 'center',
         backgroundColor: Colors.backgroundLoginColor,
-
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
@@ -670,17 +518,14 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     checkbox: {
-
         alignSelf: "center",
         borderBottomColor: Colors.fontColor,
         color: Colors.fontColor,
-
     },
     label: {
         margin: 8,
         color: Colors.fontColor,
     },
 });
-
 
 export default nextDelivery;

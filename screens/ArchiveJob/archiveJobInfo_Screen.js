@@ -53,7 +53,7 @@ import { fontSize, fontWeight } from 'styled-system';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const archiveJobInfo = ({ route }) => {
+const ArchiveJobInfo = ({ route }) => {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -136,7 +136,7 @@ const archiveJobInfo = ({ route }) => {
                 } else if (json && json.ResponseCode == '200') {
 
                     navigation.dispatch(
-                        navigation.replace('LoginScreen')
+                        navigation.replace('Login')
                     )
                 } else {
                     Alert.alert(
@@ -170,31 +170,31 @@ const archiveJobInfo = ({ route }) => {
                         style={{
                             marginLeft: 12,
                             fontSize: FontSize.medium,
-                            color: Colors.backgroundLoginColorSecondary,
+                            color: Colors.fontColor,
                         }}> {route.params.name && (`${route.params.name}`)}</Text>
                 </View>
                 <View>
-                <TouchableNativeFeedback
-                    onPress={() => navigation.goBack()}>
-                    <View
-                        style={{
-                            borderRadius: 20,
-                            flexDirection: 'column',
-                            padding: 5,
-                            backgroundColor: 'red',
-                            width: deviceWidth / 6,
-                        }}>
-                        <Text
+                    <TouchableNativeFeedback
+                        onPress={() => navigation.goBack()}>
+                        <View
                             style={{
-                                color: Colors.buttonTextColor,
-                                alignSelf: 'center',
-                                fontSize: FontSize.medium,
-                                fontWeight: 'bold',
+                                borderRadius: 20,
+                                flexDirection: 'column',
+                                padding: 5,
+                                backgroundColor: 'red',
+                                width: deviceWidth / 6,
                             }}>
-                            {'ย้อนกลับ'}
-                        </Text>
-                    </View>
-                </TouchableNativeFeedback>
+                            <Text
+                                style={{
+                                    color: Colors.buttonTextColor,
+                                    alignSelf: 'center',
+                                    fontSize: FontSize.medium,
+                                    fontWeight: 'bold',
+                                }}>
+                                {'ย้อนกลับ'}
+                            </Text>
+                        </View>
+                    </TouchableNativeFeedback>
                 </View>
 
             </View>
@@ -277,7 +277,7 @@ const archiveJobInfo = ({ route }) => {
                                                         onChangeText={(val) => {
                                                             console.log(val)
                                                         }}></TextInput>
-                                                    <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
+                                                    <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
                                                         <FontAwesome
                                                             name="qrcode"
                                                             size={25}
@@ -746,7 +746,7 @@ const archiveJobInfo = ({ route }) => {
                         justifyContent: 'flex-end',
                         flexDirection: 'row',
                     }}>
-                     
+
 
                     </View>
                     <View style={{
@@ -754,7 +754,7 @@ const archiveJobInfo = ({ route }) => {
                         flexDirection: 'row',
                     }}>
                         <TouchableNativeFeedback
-                            onPress={() => navigation.navigate('saveArchiveJobInfo', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: {} })}>
+                            onPress={() => navigation.navigate('SAJ_Info', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: {} })}>
                             <View
                                 style={{
                                     margin: 10,
@@ -802,7 +802,7 @@ const archiveJobInfo = ({ route }) => {
                         }}
                         animating={loading}
                         size="large"
-                        color={Colors.lightPrimiryColor}
+                        color={Colors.darkPrimiryColor}
                     />
                 </View>
             )}
@@ -834,8 +834,7 @@ const styles = StyleSheet.create({
         padding: 12,
         paddingLeft: 20,
         alignItems: 'center',
-        backgroundColor: Colors.backgroundLoginColor,
-
+        backgroundColor: Colors.putAway,
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
@@ -889,4 +888,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default archiveJobInfo;
+export default ArchiveJobInfo;

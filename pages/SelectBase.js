@@ -61,7 +61,7 @@ const SelectBase = ({ route }) => {
   const [selectlanguage, setlanguage] = useState(Language.getLang() == 'th' ? 'th' : 'en');
   const [basename, setBasename] = useState('');
   const [baseurl, setBsaeurl] = useState('');
-  const [guid, setGuid] = useState('');
+  const [ForkCode, setForkCode] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isShowDialog, setShowDialog] = useState(false);
@@ -91,7 +91,7 @@ const SelectBase = ({ route }) => {
 
   const fetchData = () => {
     navigation.dispatch(
-      navigation.replace('SelectScreen', { data: a })
+      navigation.replace('Select', { data: a })
     )
   }
   useEffect(() => {
@@ -123,7 +123,7 @@ const SelectBase = ({ route }) => {
         if (items[i].nameser == itemValue) {
           setBasename(items[i].nameser)
           setBsaeurl(items[i].urlser)
-          setGuid(items[i].guid)
+          setForkCode(items[i].ForkCode)
           setUsername(items[i].usernameser)
           setPassword(items[i].passwordser)
           setUpdateindex(i)
@@ -132,7 +132,7 @@ const SelectBase = ({ route }) => {
     } else {
       setBasename('')
       setBsaeurl('')
-      setGuid('')
+      setForkCode('')
       setUsername('')
       setPassword('')
     }
@@ -285,7 +285,8 @@ const SelectBase = ({ route }) => {
       .then((response) => response.json())
       .then((json) => {
         if (json.ResponseCode == 200 && json.ReasonString == 'Completed') {
-          fetch(newurl + '/DevUsers', {
+          console.log('Register SS')
+          fetch(baseurl + '/DevUsers', {
             method: 'POST',
             body: JSON.stringify({
               'BPAPUS-BPAPSV': loginReducer.serviceID,
@@ -293,9 +294,9 @@ const SelectBase = ({ route }) => {
               'BPAPUS-FUNCTION': 'Login',
               'BPAPUS-PARAM':
                 '{"BPAPUS-MACHINE": "11111122","BPAPUS-USERID": "' +
-                username +
+                username.toUpperCase() +
                 '","BPAPUS-PASSWORD": "' +
-                password +
+                password.toUpperCase() +
                 '"}',
             }),
           })
@@ -304,36 +305,14 @@ const SelectBase = ({ route }) => {
               if (json && json.ResponseCode == '200') {
                 let newObj = {
                   nameser: basename,
-                  urlser: newurl,
-                  usernameser: username,
-                  passwordser: password
-                }
-                console.log(json.ResponseCode)
-                if (state == '-1') {
-                  for (let i in loginReducer.ipAddress) {
-                    if (i == updateindex) {
-                      temp.push(newObj)
-                    } else {
-                      temp.push(loginReducer.ipAddress[i])
-                    }
-                  }
-                  dispatch(loginActions.ipAddress(temp))
-                  dispatch(databaseActions.setData(newObj))
-                } else if (state == '1') {
-                  if (items.length > 0) {
-                    for (let i in items) {
-                      temp.push(items[i])
-                    }
-                  }
-                  temp.push(newObj)
-                  dispatch(loginActions.ipAddress(temp))
-                  dispatch(databaseActions.setData(newObj))
-                } else if (state == '0') {
-                  dispatch(databaseActions.setData(newObj))
+                  urlser: baseurl,
+                  ForkCode: ForkCode,
+                  usernameser: username.toUpperCase(),
+                  passwordser: password.toUpperCase()
                 }
 
-
-                fetch(newurl + '/DevUsers', {
+                dispatch(databaseActions.setData(newObj))
+                fetch(baseurl + '/DevUsers', {
                   method: 'POST',
                   body: JSON.stringify({
                     'BPAPUS-BPAPSV': loginReducer.serviceID,
@@ -350,7 +329,7 @@ const SelectBase = ({ route }) => {
                         Language.t('alert.succeed'),
                         Language.t('selectBase.connect') + ' ' + basename + ' ' + Language.t('alert.succeed'), [{
                           text: Language.t('alert.ok'), onPress: () => navigation.dispatch(
-                            navigation.replace('LoginScreen')
+                            navigation.replace('Login')
                           )
                         }])
                     }
@@ -391,8 +370,6 @@ const SelectBase = ({ route }) => {
         console.log('checkIPAddress');
         setLoading(false)
       });
-
-
   };
 
   return (
@@ -402,19 +379,19 @@ const SelectBase = ({ route }) => {
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}>
-            <FontAwesome name="arrow-left" style={{ color: Colors.backgroundLoginColorSecondary, }} size={FontSize.large} />
+            <FontAwesome name="arrow-left" style={{ color: Colors.buttonTextColor, }} size={FontSize.medium * 1.5} />
           </TouchableOpacity>
           <Text
             style={{
               marginLeft: 12,
               fontSize: FontSize.medium,
-              color: Colors.backgroundLoginColorSecondary,
+              color: Colors.buttonTextColor,
             }}> {Language.t('selectBase.header')}</Text>
         </View>
         <View>
           <Picker
             selectedValue={selectlanguage}
-            style={{ color: Colors.backgroundLoginColorSecondary, width: 110 }}
+            style={{ color: Colors.buttonTextColor, width: 110 }}
             mode="dropdown"
             onValueChange={(itemValue, itemIndex) => Alert.alert('', Language.t('menu.changeLanguage'), [{ text: Language.t('alert.ok'), onPress: () => console.log(' setlanguageState(itemValue)') }, { text: Language.t('alert.cancel'), onPress: () => { } }])} >
             <Picker.Item label="TH" value="th" />
@@ -439,7 +416,7 @@ const SelectBase = ({ route }) => {
                       backgroundColor: Colors.backgroundColorSecondary,
                       flexDirection: 'column',
                       borderWidth: 1,
-                      borderColor: Colors.buttonColorPrimary,
+                      borderColor: Colors.darkPrimiryColor,
                       height: 50,
                       borderRadius: 10,
                       paddingLeft: 20,
@@ -455,7 +432,7 @@ const SelectBase = ({ route }) => {
                         style={{
                           flex: 8,
                           marginLeft: 10,
-                          borderBottomColor: Colors.buttonColorPrimary,
+                          borderBottomColor: Colors.darkPrimiryColor,
                           color: Colors.fontColor,
                           paddingVertical: 3,
                           fontSize: FontSize.medium,
@@ -470,12 +447,12 @@ const SelectBase = ({ route }) => {
                         onChangeText={(val) => {
                           setBsaeurl(val);
                         }}></TextInput>
-                      <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
+                      <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
 
                         <FontAwesome
                           name="qrcode"
-                          size={25}
-                          color={Colors.buttonColorPrimary}
+                          size={FontSize.large}
+                          color={Colors.darkPrimiryColor}
                         />
 
                       </TouchableOpacity>
@@ -484,7 +461,7 @@ const SelectBase = ({ route }) => {
                 </View>
                 <View style={{ marginTop: 10 }}>
                   <Text style={styles.textTitle}>
-                    {'GUID : '}
+                    {'รหัสรถ : '}
                   </Text>
                 </View>
                 <View style={{ marginTop: 10 }}>
@@ -493,7 +470,7 @@ const SelectBase = ({ route }) => {
                       backgroundColor: Colors.backgroundColorSecondary,
                       flexDirection: 'column',
                       borderWidth: 1,
-                      borderColor: Colors.buttonColorPrimary,
+                      borderColor: Colors.darkPrimiryColor,
                       height: 50,
                       borderRadius: 10,
                       paddingLeft: 20,
@@ -507,7 +484,7 @@ const SelectBase = ({ route }) => {
                         style={{
                           flex: 8,
                           marginLeft: 5,
-                          borderBottomColor: Colors.buttonColorPrimary,
+                          borderBottomColor: Colors.darkPrimiryColor,
                           color: Colors.fontColor,
                           paddingVertical: 3,
                           fontSize: FontSize.medium,
@@ -516,10 +493,10 @@ const SelectBase = ({ route }) => {
 
                         placeholderTextColor={Colors.fontColorSecondary}
 
-                        value={username}
-                        placeholder={'GUID ..'}
+                        value={ForkCode}
+                        placeholder={'รหัสรถ ..'}
                         onChangeText={(val) => {
-                          setGuid(val);
+                          setForkCode(val);
                         }}></TextInput>
 
                     </View>
@@ -536,7 +513,7 @@ const SelectBase = ({ route }) => {
                       backgroundColor: Colors.backgroundColorSecondary,
                       flexDirection: 'column',
                       borderWidth: 1,
-                      borderColor: Colors.buttonColorPrimary,
+                      borderColor: Colors.darkPrimiryColor,
                       height: 50,
                       borderRadius: 10,
                       paddingLeft: 20,
@@ -550,7 +527,7 @@ const SelectBase = ({ route }) => {
                         style={{
                           flex: 8,
                           marginLeft: 5,
-                          borderBottomColor: Colors.buttonColorPrimary,
+                          borderBottomColor: Colors.darkPrimiryColor,
                           color: Colors.fontColor,
                           paddingVertical: 3,
                           fontSize: FontSize.medium,
@@ -580,7 +557,7 @@ const SelectBase = ({ route }) => {
                       flexDirection: 'column',
                       height: 50,
                       borderWidth: 1,
-                      borderColor: Colors.buttonColorPrimary,
+                      borderColor: Colors.darkPrimiryColor,
                       borderRadius: 10,
                       paddingLeft: 20,
                       paddingRight: 20,
@@ -596,7 +573,7 @@ const SelectBase = ({ route }) => {
                           color: Colors.fontColor,
                           paddingVertical: 3,
                           fontSize: FontSize.medium,
-                          borderBottomColor: Colors.buttonColorPrimary,
+                          borderBottomColor: Colors.darkPrimiryColor,
                           borderBottomWidth: 0.7,
                         }}
                         secureTextEntry={data.secureTextEntry ? true : false}
@@ -609,37 +586,34 @@ const SelectBase = ({ route }) => {
                           setPassword(val);
                         }}
                       />
-
                       <TouchableOpacity style={{ marginLeft: 10 }} onPress={updateSecureTextEntry}>
                         {data.secureTextEntry ? (
                           <FontAwesome
                             name="eye-slash"
-                            size={25}
-                            color={Colors.buttonColorPrimary}
+                            size={FontSize.medium}
+                            color={Colors.darkPrimiryColor}
                           />
                         ) : (
                           <FontAwesome
                             name="eye"
-                            size={25}
-                            color={Colors.buttonColorPrimary} />
+                            size={FontSize.medium}
+                            color={Colors.darkPrimiryColor} />
                         )}
                       </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-
-
                 <View style={styles.body1e}>
                   <TouchableNativeFeedback
                     onPress={() => _onPressAddbase()}>
                     <View
                       style={{
-                        borderRadius: 10,
+                        borderRadius: 30,
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        height: 50,
-                        marginRight: 10, width: deviceWidth / 4,
-                        backgroundColor: Colors.buttonColorPrimary,
+                        height: 80,
+                        marginRight: 10, width: deviceWidth / 3,
+                        backgroundColor: Colors.darkPrimiryColor,
                       }}>
                       <Text
                         style={{
@@ -652,9 +626,7 @@ const SelectBase = ({ route }) => {
                       </Text>
                     </View>
                   </TouchableNativeFeedback>
-
-                  {items.length > 0 ? (
-
+                  {/* {items.length > 0 ? (
                     <TouchableNativeFeedback
                       onPress={() => _onPressDelete()}>
                       <View
@@ -664,7 +636,7 @@ const SelectBase = ({ route }) => {
                           justifyContent: 'center',
                           height: 50,
                           width: deviceWidth / 5,
-                          backgroundColor: Colors.backgroundLoginColor,
+                          backgroundColor: Colors.buttonColorPrimary,
                         }}>
                         <Text
                           style={{
@@ -677,9 +649,7 @@ const SelectBase = ({ route }) => {
                         </Text>
                       </View>
                     </TouchableNativeFeedback>
-
                   ) : (
-
                     <TouchableNativeFeedback
                       onPress={() => null}>
                       <View
@@ -689,7 +659,7 @@ const SelectBase = ({ route }) => {
                           justifyContent: 'center',
                           height: 50,
                           width: deviceWidth / 5,
-                          backgroundColor: '#979797',
+                          backgroundColor: Colors.buttonTextColor,
                         }}>
                         <Text
                           style={{
@@ -703,7 +673,7 @@ const SelectBase = ({ route }) => {
                         </Text>
                       </View>
                     </TouchableNativeFeedback>
-                  )}
+                  )} */}
 
                 </View>
               </View>
@@ -714,56 +684,55 @@ const SelectBase = ({ route }) => {
         </ScrollView>
 
 
-        {loading && (
-          <View
-            style={{
-              width: deviceWidth,
-              height: deviceHeight,
-              opacity: 0.5,
-              backgroundColor: 'black',
-              alignSelf: 'center',
-              justifyContent: 'center',
-              alignContent: 'center',
-              position: 'absolute',
-            }}>
-            <ActivityIndicator
-              style={{
-                borderRadius: 15,
-                backgroundColor: null,
-                width: 100,
-                height: 100,
-                alignSelf: 'center',
-              }}
-              animating={loading}
-              size="large"
-              color={Colors.lightPrimiryColor}
-            />
-          </View>
-        )}
 
       </View>
+
+      {loading && (
+        <View
+          style={{
+            width: deviceWidth,
+            height: deviceHeight,
+            opacity: 0.5,
+            backgroundColor: 'black',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignContent: 'center',
+            position: 'absolute',
+          }}>
+           <ActivityIndicator
+            style={{
+              borderRadius: 15,
+              backgroundColor: null,
+              width: 100,
+              height: 100,
+              alignSelf: 'center',
+            }}
+            animating={loading}
+            size="large"
+            color={Colors.darkPrimiryColor}
+          />
+        </View>
+      )}
     </>
   )
 }
 
 const styles = StyleSheet.create({
   container1: {
-    paddingTop:20,
+    paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
-
+    backgroundColor: Colors.backgroundColor
   },
   body: {
     width: deviceWidth / 2
   },
   body1e: {
-
     margin: 20,
     flexDirection: 'row',
     justifyContent: 'center'
-
   },
   body1: {
     marginTop: 10,
@@ -774,8 +743,7 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingLeft: 20,
     alignItems: 'center',
-    backgroundColor: Colors.backgroundLoginColor,
-
+    backgroundColor: Colors.headerColor,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
@@ -812,7 +780,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     padding: 5,
     alignItems: 'center',
-    backgroundColor: Colors.buttonColorPrimary,
+    backgroundColor: Colors.darkPrimiryColor,
     borderRadius: 10,
   },
   textButton: {

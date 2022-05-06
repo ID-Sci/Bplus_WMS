@@ -53,7 +53,7 @@ import { fontSize, fontWeight } from 'styled-system';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const deliveryInfo = ({ route }) => {
+const DeliveryInfo = ({ route }) => {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -136,7 +136,7 @@ const deliveryInfo = ({ route }) => {
                 } else if (json && json.ResponseCode == '200') {
 
                     navigation.dispatch(
-                        navigation.replace('LoginScreen')
+                        navigation.replace('Login')
                     )
                 } else {
                     Alert.alert(
@@ -171,7 +171,7 @@ const deliveryInfo = ({ route }) => {
                         style={{
                             marginLeft: 12,
                             fontSize: FontSize.medium,
-                            color: Colors.backgroundLoginColorSecondary,
+                            color: Colors.fontColor,
                         }}> {route.params.name && (`${route.params.name}`)}</Text>
                 </View>
                 <View>
@@ -206,7 +206,11 @@ const deliveryInfo = ({ route }) => {
                     </View>
                 </TouchableNativeFeedback>
                 <TouchableNativeFeedback
-                    onPress={() => navigation.navigate('saveDeliveryInfo', { name: 'บันทึกรายละเอียดงานส่งมอบ', data: {} })}>
+                    onPress={() =>
+                        navigation.dispatch(
+                            navigation.replace('SD_Info', { name: 'Put-บันทึกรายละเอียดงานส่งมอบ', data: {} })
+                        )
+                    }>
                     <View
                         style={{
                             margin: 10,
@@ -273,7 +277,7 @@ const deliveryInfo = ({ route }) => {
                                                     onChangeText={(val) => {
                                                         console.log(val)
                                                     }}></TextInput>
-                                                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
+                                                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
                                                     <FontAwesome
                                                         name="qrcode"
                                                         size={25}
@@ -756,7 +760,7 @@ const deliveryInfo = ({ route }) => {
                             }}
                             animating={loading}
                             size="large"
-                            color={Colors.lightPrimiryColor}
+                            color={Colors.darkPrimiryColor}
                         />
                     </View>
                 )}
@@ -791,8 +795,7 @@ const styles = StyleSheet.create({
         padding: 12,
         paddingLeft: 20,
         alignItems: 'center',
-        backgroundColor: Colors.backgroundLoginColor,
-
+        backgroundColor: Colors.darkPrimiryColor,
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
@@ -846,4 +849,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default deliveryInfo;
+export default DeliveryInfo;

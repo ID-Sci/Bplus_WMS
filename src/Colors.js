@@ -1,5 +1,5 @@
 // const backgroundColor = "#03A9F4";
-const backgroundColor = "#E6EBFF";
+const backgroundColor = "#b1b8c0";
 const backgroundColorSecondary = "#FCFCFC";
 const backgroundLoginColor = "#24B503";
 const backgroundLoginColorSecondary = "#FCFCFC";
@@ -10,24 +10,28 @@ export default {
   backgroundLoginColorSecondary,
   primaryColor: "#24B503",
   lightPrimiryColor: "#80d6ff",
-  darkPrimiryColor: "#0077c2",
+  darkPrimiryColor: "#f99e1c",
   fontColor: "#474040",
   buttonTextColor:'#ffffff',
   fontColor2: "#FCFCFC",
   fontColorSecondary: "#B5B7C0",
   borderColor: "#B5B7C0",
-  buttonColorPrimary: "#24B503",
+  buttonColorPrimary: "#e4395d",
   textColor: "#292F39",
   itemColor: "#24B503",
   linkColor: "#0077c2",
+  putAway: "#006AAD",
+  picking: "#6FA7DB",
+  putAwayItem: "#0E9EF0",
+  pickingItem: "#AAE0FA",
   // buttonColor: "#24B503",
   // textColor: "#FFFFFF",
-  textColorSecondary: "#BDBDBD",
+  textColorSecondary: "#e8e8e8",
   inputText: "#757575",
   buttonColorSecondary: "#448AFF",
   loadingColor: "#24B503",
   // backgroundColor: "#F1F1F1",
-  headerColor: "#E86C2C",
+  headerColor: "#2d8aab",
   headerColor2: "#E8995E",
   alert: "rgba(255,0,0,0.8)"
   // menuButton : "rgba(2, 136, 209, 0.7)"

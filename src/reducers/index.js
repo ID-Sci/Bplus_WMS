@@ -1,8 +1,9 @@
 // Imports: Dependencies
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import AsyncStorage from '@react-native-community/async-storage';
 // Imports: Reducers
 import loginReducer from './loginReducer';
+import dataReducer from './dataReducer';
 import registerReducer from './registerReducer';
 import redeemReducer from './redeemReducer';
 import promotionReducer from './promotionReducer';
@@ -20,14 +21,15 @@ const appReducer = combineReducers({
   contactUsReducer: contactUsReducer,
   interestReducer: interestReducer,
   loginReducer: loginReducer,
+  dataReducer: dataReducer,
   notiReducer: notiReducer,
   redeemReducer: redeemReducer,
   promotionReducer: promotionReducer,
   registerReducer: registerReducer,
   signoutReducer: signoutReducer,
   campaignReducer: campaignReducer,
-  userReducer:userReducer,
-  databaseReducer:databaseReducer,
+  userReducer: userReducer,
+  databaseReducer: databaseReducer,
 });
 const rootReducer = (state, action) => {
   if (action.type === 'SIGNOUT_REQUEST') {

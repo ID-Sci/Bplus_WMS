@@ -21,7 +21,7 @@ import { QRreader } from 'react-native-qr-decode-image-camera';
 import { Base64 } from '../src/safe_Format';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-const ScanScreen = ({ route }) => {
+const ScanQRScreen = ({ route }) => {
   const defaultCountDown = 1;
   let clockCall = null;
   const navigation = useNavigation();
@@ -61,86 +61,73 @@ const ScanScreen = ({ route }) => {
   }
   const onSuccess = (e) => {
 
-    if (e && e.type != 'QR_CODE' && e.type != 'org.iso.QRCode') {
-      Alert.alert(Language.t('alert.errorTitle'), Language.t('selectBase.notfound'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
-    } else {
-      if (e && e.data) {
-        let result = Base64.decode(Base64.decode(e.data)).split('|')
+    if (e && e.data) {
 
-        if (result[0].indexOf('.dll') == -1) {
-          Alert.alert(Language.t('alert.errorTitle'), Language.t('selectBase.invalid'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
-        } else {
-          let tempurl = result[0].split('.dll')
-          let serurl = tempurl[0] + '.dll'
-          let tempnmae = serurl.split('/')
-          let urlnmae = null;
-          for (var s in tempnmae) if (tempnmae[s].search('.dll') > -1) urlnmae = tempnmae[s].split('.dll')
-          let newObj = { label: serurl, value: urlnmae[0] };
-          navigation.navigate(route.params.route, { post: newObj, data: a });
-        }
-      }
+      let result = e.data
+     
+      console.log(result)
+      navigation.navigate(route.params.route, { post: result, data: route.params.data,  code: Math.floor(100000 + Math.random() * 900000) });
+
     }
+
   };
 
-  const chooseFile = () => {
-    let options = {
-      title: Language.t('selectBase.SelectImg'),
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('response.didCancel');
-      } else if (response.error) {
-        console.log('response.error');
-      } else {
-        let path = null;
-        if (Platform.OS == 'android') {
-          path = response.assets[0].path;
-          if (!path) {
-            path = response.assets[0].uri;
-          }
-        } else {
-          path = response.path;
-          if (!path) {
-            path = response.uri;
-          }
-        }
+  // const chooseFile = () => {
+  //   let options = {
+  //     title: Language.t('selectBase.SelectImg'),
+  //     storageOptions: {
+  //       skipBackup: true,
+  //       path: 'images',
+  //     },
+  //   };
+  //   ImagePicker.launchImageLibrary(options, (response) => {
+  //     if (response.didCancel) {
+  //       console.log('response.didCancel');
+  //     } else if (response.error) {
+  //       console.log('response.error');
+  //     } else {
+  //       let path = null;
+  //       if (Platform.OS == 'android') {
+  //         path = response.assets[0].path;
+  //         if (!path) {
+  //           path = response.assets[0].uri;
+  //         }
+  //       } else {
+  //         path = response.path;
+  //         if (!path) {
+  //           path = response.uri;
+  //         }
+  //       }
+  //       QRreader(path)
+  //         .then((data) => {
+  //           if (data) {
+  //             let result = Base64.decode(Base64.decode(data)).split('|')
+  //             if (result[0].indexOf('.dll') == -1) {
+  //               Alert.alert(Language.t('alert.errorTitle'), Language.t('selectBase.invalid'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
 
+  //             } else {
+  //               let tempurl = result[0].split('.dll')
+  //               let serurl = tempurl[0] + '.dll'
+  //               let tempnmae = serurl.split('/')
+  //               let urlnmae = null;
+  //               for (var s in tempnmae) if (tempnmae[s].search('.dll') > -1) urlnmae = tempnmae[s].split('.dll')
+  //               let newObj = { label: serurl, value: urlnmae[0] };
+  //               navigation.navigate(route.params.route, { post: newObj, data: a });
+  //             }
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
 
-        QRreader(path)
-          .then((data) => {
-            if (data) {
-              let result = Base64.decode(Base64.decode(data)).split('|')
-              if (result[0].indexOf('.dll') == -1) {
-                Alert.alert(Language.t('alert.errorTitle'), Language.t('selectBase.invalid'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
-
-              } else {
-                let tempurl = result[0].split('.dll')
-                let serurl = tempurl[0] + '.dll'
-                let tempnmae = serurl.split('/')
-                let urlnmae = null;
-                for (var s in tempnmae) if (tempnmae[s].search('.dll') > -1) urlnmae = tempnmae[s].split('.dll')
-                let newObj = { label: serurl, value: urlnmae[0] };
-                navigation.navigate(route.params.route, { post: newObj, data: a });
-              }
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
-      }
-    });
-  };
+  //     }
+  //   });
+  // };
 
   return (
     <>
       <View
         style={styles.tabbar}>
-
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -151,15 +138,14 @@ const ScanScreen = ({ route }) => {
             {'ย้อนกลับ'}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={chooseFile}
           style={styles.buttonTouchable2}>
           <Text style={styles.buttonText}>
             {Language.t('selectBase.SelectImg')}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
-
       <View>
         <QRCodeScanner
           checkAndroid6Permissions={checkAndroidPermission}
@@ -168,7 +154,6 @@ const ScanScreen = ({ route }) => {
           fadeIn={true}
           reactivate={true}
         />
-
       </View>
       <View
         style={{
@@ -176,7 +161,6 @@ const ScanScreen = ({ route }) => {
           width: deviceWidth,
           height: deviceHeight - 70,
           opacity: 0.5,
-
           alignSelf: 'center',
           justifyContent: 'center',
           alignContent: 'center',
@@ -192,8 +176,6 @@ const ScanScreen = ({ route }) => {
             height: deviceHeight / 2,
           }}
         />
-
-
       </View>
       {countdown % 2 == 0 && (
         <View
@@ -201,7 +183,6 @@ const ScanScreen = ({ route }) => {
             marginTop: 70,
             width: deviceWidth,
             height: deviceHeight - 70,
-
             opacity: 0.5,
             alignSelf: 'center',
             justifyContent: 'center',
@@ -218,12 +199,8 @@ const ScanScreen = ({ route }) => {
               height: deviceHeight / 2,
             }}
           />
-
-
         </View>
       )}
-
-
     </>
   );
 };
@@ -283,4 +260,4 @@ const mapDispatchToProps = (dispatch) => {
 
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(ScanScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ScanQRScreen);

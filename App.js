@@ -25,17 +25,19 @@ import {
 
 
 import LoginScreen from './screens/LoginScreen';
-import MainScreen from './screens/MainScreen';
-import nextArchiveJob from './screens/ArchiveJob/nextArchiveJob';
-import archiveJobInfo from './screens/ArchiveJob/archiveJobInfo';
-import saveArchiveJobInfo from './screens/ArchiveJob/saveArchiveJobInfo';
-import nextDelivery from './screens/Delivery/nextDelivery';
-import deliveryInfo from './screens/Delivery/deliveryInfo';
-import saveDeliveryInfo from './screens/Delivery/saveDeliveryInfo';
+import Mains  from './screens/MainScreen';
+import ScanQRScreen from './screens/ScanQRScreen';
+import Splashs from './screens/splashSs';
+
+import NextArchiveJob from './screens/ArchiveJob/nextArchiveJob_Screen';
+import ArchiveJobInfo from './screens/ArchiveJob/archiveJobInfo_Screen';
+import SaveArchiveJobInfo from './screens/ArchiveJob/saveArchiveJobInfo_Screen';
+import NextDelivery from './screens/Delivery/nextDelivery_Screen';
+import DeliveryInfo from './screens/Delivery/deliveryInfo_Screen';
+import SaveDeliveryInfo from './screens/Delivery/saveDeliveryInfo_Screen';
 
 import SelectBase from './pages/SelectBase';
 import ScanScreen from './pages/ScanScreen';
-
 
 const LoginStack = createStackNavigator();
 const MainStack = createStackNavigator();
@@ -62,12 +64,12 @@ const App = () => {
 
         <LoginStack.Screen
           options={{ headerShown: false }}
-          name="SelectScreen"
+          name="Select"
           component={SelectBase}
         />
         <LoginStack.Screen
           options={{ title: Language.t('selectBase.scanQR'), headerShown: false }}
-          name="ScanScreen"
+          name="Scan"
           component={ScanScreen}
         />
 
@@ -76,50 +78,61 @@ const App = () => {
   }
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+    <Provider store={store} >
+      <PersistGate loading={null} persistor={persistor} >
         <NavigationContainer>
           <SafeAreaView style={{ flex: 1 }}>
             <MainStack.Navigator>
               <MainStack.Screen
                 options={{ headerShown: false }}
-                name="LoginScreen"
+                name="Login"
                 component={LoginStackScreen}
               />
               <MainStack.Screen
                 options={{ headerShown: false }}
-                name="MainScreen"
-                component={MainScreen}
+                name="Main"
+                component={Mains}
               />
               <MainStack.Screen
                 options={{ headerShown: false }}
-                name="nextArchiveJob"
-                component={nextArchiveJob}
+                name="ScanQR"
+                component={ScanQRScreen}
               />
               <MainStack.Screen
                 options={{ headerShown: false }}
-                name="archiveJobInfo"
-                component={archiveJobInfo}
+                name="Splashs"
+                component={Splashs}
               />
-                <MainStack.Screen
+
+              <MainStack.Screen
                 options={{ headerShown: false }}
-                name="saveArchiveJobInfo"
-                component={saveArchiveJobInfo}
-              />
-                 <MainStack.Screen
-                options={{ headerShown: false }}
-                name="nextDelivery"
-                component={nextDelivery}
+                name="NAJ"
+                component={NextArchiveJob}
               />
               <MainStack.Screen
                 options={{ headerShown: false }}
-                name="deliveryInfo"
-                component={deliveryInfo}
+                name="AJ_Info"
+                component={ArchiveJobInfo}
               />
-                 <MainStack.Screen
+              <MainStack.Screen
                 options={{ headerShown: false }}
-                name="saveDeliveryInfo"
-                component={saveDeliveryInfo}
+                name="SAJ_Info"
+                component={SaveArchiveJobInfo}
+              />
+              <MainStack.Screen
+                options={{ headerShown: false }}
+                name="ND"
+                component={NextDelivery}
+              />
+              <MainStack.Screen
+                options={{ headerShown: false }}
+                name="D_Info"
+                component={DeliveryInfo}
+              />
+              <MainStack.Screen
+                options={{ headerShown: false }}
+                name="SD_Info"
+                component={SaveDeliveryInfo}
               />
 
             </MainStack.Navigator>

@@ -17,6 +17,7 @@ const persistConfig = {
   // Whitelist (Save Specific Reducers)
   whitelist: [
     'loginReducer',
+    'dataReducer',
     'registerReducer',
     'redeemReducer',
     'activityReducer',
@@ -26,6 +27,7 @@ const persistConfig = {
     'userReducer',
     'interestReducer',
     'databaseReducer',
+
   ],
   // Blacklist (Don't Save Specific Reducers)
   blacklist: ['signoutReducer'],

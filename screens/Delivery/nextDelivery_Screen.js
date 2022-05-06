@@ -53,7 +53,7 @@ import { borderColor, fontSize, fontWeight } from 'styled-system';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const nextDelivery = ({ route }) => {
+const NextDelivery = ({ route }) => {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -90,10 +90,12 @@ const nextDelivery = ({ route }) => {
     const [data, setData] = useStateIfMounted({
         secureTextEntry: true,
     });
-
+    const [paramData, setparamData] = useState({});
 
     useEffect(() => {
-
+        if (route.params.data)
+            setparamData(route.params.data)
+        console.log(paramData)
         //backsakura013
     }, [route.params?.data]);
     useEffect(() => {
@@ -136,7 +138,7 @@ const nextDelivery = ({ route }) => {
                 } else if (json && json.ResponseCode == '200') {
 
                     navigation.dispatch(
-                        navigation.replace('LoginScreen')
+                        navigation.replace('Login')
                     )
                 } else {
                     Alert.alert(
@@ -172,49 +174,35 @@ const nextDelivery = ({ route }) => {
                             marginLeft: 12,
                             fontSize: FontSize.medium,
                             fontWeight: 'bold',
-                            color: Colors.backgroundLoginColorSecondary,
+                            color: Colors.fontColor2,
                         }}> {route.params.name && (`${route.params.name}`)}</Text>
                 </View>
                 <View>
-                    <TouchableNativeFeedback
-                        onPress={() => navigation.goBack()}>
-                        <View
-                            style={{
-                                borderRadius: 20,
-                                flexDirection: 'column',
-                                padding: 5,
-                                backgroundColor: 'red',
-                                width: deviceWidth / 6,
-                            }}>
-                            <Text
-                                style={{
-                                    color: Colors.buttonTextColor,
-                                    alignSelf: 'center',
-                                    fontSize: FontSize.medium,
-                                    fontWeight: 'bold',
-                                }}>
-                                {'ย้อนกลับ'}
-                            </Text>
-                        </View>
-                    </TouchableNativeFeedback>
+
                 </View>
             </View>
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <SafeAreaView style={{
+                flex: 1,
+                backgroundColor: Colors.backgroundColor
+            }}>
                 <ScrollView>
                     < View style={container1} >
                         <View width={deviceWidth / 2} style={{
+                            marginTop: 20,
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignContent: 'center',
+                            backgroundColor: Colors.buttonTextColor
                         }}>
                             <View style={{
-                                paddingTop: 10,
+
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
+
                             }}>
-                                <View width={deviceWidth / 6}>
+                                <View width={deviceWidth / 6} >
                                     <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle}>
+                                        <Text style={styles.textTitle1}>
                                             ตำแหน่งเก็บ :
                                         </Text>
                                     </View>
@@ -225,22 +213,22 @@ const nextDelivery = ({ route }) => {
                                             <TextInput
                                                 width={deviceWidth / 3.5}
                                                 style={{
-                                                    borderBottomColor: Colors.buttonColorPrimary,
+                                                    borderBottomColor: Colors.picking,
                                                     color: Colors.fontColor,
                                                     fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
+                                                    borderBottomWidth: 1,
                                                 }}
-                                                placeholderTextColor={Colors.fontColorSecondary}
+                                                placeholderTextColor={Colors.picking}
                                                 placeholder={'ตำแหน่งเก็บ ..'}
                                                 value={''}
                                                 onChangeText={(val) => {
                                                     console.log(val)
                                                 }}></TextInput>
-                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
+                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
                                                 <FontAwesome
                                                     name="qrcode"
                                                     size={FontSize.medium * 2}
-                                                    color={Colors.buttonColorPrimary}
+                                                    color={Colors.picking}
                                                 />
                                             </TouchableOpacity>
                                         </View>
@@ -248,42 +236,84 @@ const nextDelivery = ({ route }) => {
                                 </View >
                             </View>
                             <View style={{
-                                paddingTop: 10,
+
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
+
+                            }}>
+                                <View width={deviceWidth / 6} >
+                                    <View style={{ padding: 10, }}>
+                                        <Text style={styles.textTitle1}>
+                                            รหัสสินค้า :
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{}}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <TextInput
+                                                width={deviceWidth / 3.5}
+                                                style={{
+                                                    borderBottomColor: Colors.picking,
+                                                    color: Colors.fontColor,
+                                                    fontSize: FontSize.medium,
+                                                    borderBottomWidth: 1,
+                                                }}
+                                                placeholderTextColor={Colors.picking}
+                                                placeholder={'รหัสสินค้า ..'}
+                                                value={''}
+                                                onChangeText={(val) => {
+                                                    console.log(val)
+                                                }}></TextInput>
+                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
+                                                <FontAwesome
+                                                    name="qrcode"
+                                                    size={FontSize.medium * 2}
+                                                    color={Colors.picking}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </View >
+                            </View>
+                            <View style={{
+                                marginTop: 10,
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+
                             }}>
                                 <View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                        <Text style={styles.textTitle}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
+                                        <Text style={styles.textTitle1}>
                                             บล๊อค
                                         </Text>
                                     </View>
-                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                        <Text style={styles.textTitle}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle1}>
                                             xxx
                                         </Text>
                                     </View>
                                 </ View>
                                 < View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                        <Text style={styles.textTitle}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
+                                        <Text style={styles.textTitle1}>
                                             แถว
                                         </Text>
                                     </View>
-                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                        <Text style={styles.textTitle}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle1}>
                                             xxx
                                         </Text>
                                     </View>
                                 </View >
                                 < View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                        <Text style={styles.textTitle}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
+                                        <Text style={styles.textTitle1}>
                                             ชั้น
                                         </Text>
                                     </View>
-                                    <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                        <Text style={styles.textTitle}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle1}>
                                             xxx
                                         </Text>
                                     </View>
@@ -292,18 +322,18 @@ const nextDelivery = ({ route }) => {
                             <View style={{
                                 paddingTop: 10,
                                 justifyContent: 'space-between',
-                                flexDirection: 'row', borderColor: Colors.buttonColorPrimary, borderWidth: 1
+                                flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking,
                             }}>
                                 <View width={deviceWidth / 6}>
                                     <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle}>
+                                        <Text style={styles.textTitle2}>
                                             รหัสสินค้า :
                                         </Text>
                                     </View>
                                 </ View>
                                 < View width={deviceWidth / 3}>
                                     <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle}>
+                                        <Text style={styles.textTitle2}>
                                             xxxxx
                                         </Text>
                                     </View>
@@ -312,18 +342,18 @@ const nextDelivery = ({ route }) => {
                             <View style={{
                                 paddingTop: 10,
                                 justifyContent: 'space-between',
-                                flexDirection: 'row', borderColor: Colors.buttonColorPrimary, borderWidth: 1
+                                flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking,
                             }}>
                                 <View width={deviceWidth / 6}>
                                     <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle}>
+                                        <Text style={styles.textTitle2}>
                                             ชื่อสินค้า :
                                         </Text>
                                     </View>
                                 </ View>
                                 < View width={deviceWidth / 3}>
                                     <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle}>
+                                        <Text style={styles.textTitle2}>
                                             xxxxxx
                                         </Text>
                                     </View>
@@ -331,29 +361,30 @@ const nextDelivery = ({ route }) => {
                             </View>
                         </View>
                         <View style={{
+                            marginTop: 20,
                             justifyContent: 'space-between',
                             flexDirection: 'row',
                         }}>
                             <View width={deviceWidth / 4} >
-                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                    <Text style={styles.textTitle}>
+                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                    <Text style={styles.textTitle1}>
                                         หน่วย
                                     </Text>
                                 </View>
-                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                    <Text style={styles.textTitle}>
+                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                    <Text style={styles.textTitle1}>
                                         xxxx
                                     </Text>
                                 </View>
                             </ View>
                             < View width={deviceWidth / 4}>
-                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                    <Text style={styles.textTitle}>
+                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                    <Text style={styles.textTitle1}>
                                         จำนวน
                                     </Text>
                                 </View>
-                                <View style={{ padding: 10, borderColor: Colors.buttonColorPrimary, borderWidth: 1 }}>
-                                    <Text style={styles.textTitle}>
+                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                    <Text style={styles.textTitle1}>
                                         xxxxx
                                     </Text>
                                 </View>
@@ -361,95 +392,109 @@ const nextDelivery = ({ route }) => {
                         </View>
                     </View>
                 </ScrollView>
-                <View style={{     alignItems:'center',}}>
-                <View style={{
-                    flexDirection: 'row',
-               
-                    justifyContent: 'space-between',
-                  width:deviceWidth/2,
-                 
-
-                    marginTop: 20,
-                }}>
-                <View style={{  flexDirection: 'row'}}>
-                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
-                        <FontAwesome
-                            name="caret-left"
-                            size={deviceWidth / 8}
-                            color={Colors.fontColor}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanScreen', { route: 'SelectScreen' })}>
-                        <FontAwesome
-                            name="caret-right"
-                            size={deviceWidth / 8}
-                            color={Colors.fontColor}
-                        />
-                    </TouchableOpacity>
-                </View>
-               
-                    <TouchableNativeFeedback
-                        style={{
-                            marginRight: 20,
-                            marginBottom: 20,
-                            borderRadius: deviceWidth / 6,
-                            padding: 10,
-                            width: deviceWidth / 6,
-                            height: deviceWidth / 6
-                        }}
-                        onPress={() => navigation.navigate('saveDeliveryInfo', { name: 'บันทึกรายละเอียดงานส่งมอบ', data: {} })}>
-                        <View
-                            style={{
-                                width: deviceWidth / 4,
-                                height: deviceWidth / 12,
-                                justifyContent: 'center',
-                                margin: 10,
-                                borderRadius: 20,
-                                flexDirection: 'column',
-                                padding: 10,
-                                backgroundColor: Colors.buttonColorPrimary,
-                            }}>
-                            <Text
-                                style={{
-                                    color: Colors.buttonTextColor,
-                                    alignSelf: 'center',
-                                    fontSize: FontSize.large,
-                                    fontWeight: 'bold',
-                                }}>
-                                {'รับงาน'}
-                            </Text>
-                        </View>
-                    </TouchableNativeFeedback>
-                </View>
-                </View>
-             
-                {loading && (
+            </SafeAreaView>
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingTop: 20,
+                backgroundColor: Colors.backgroundColor
+            }}>
+                <TouchableOpacity
+                    style={{
+                        width: deviceWidth / 4,
+                        height: deviceWidth / 12,
+                        justifyContent: 'center',
+                        margin: 10,
+                        borderRadius: 20,
+                        flexDirection: 'column',
+                        padding: 10,
+                        backgroundColor: Colors.buttonColorPrimary,
+                    }}
+                    onPress={() => navigation.dispatch(
+                        navigation.replace('Splashs'))}>
                     <View
                         style={{
-                            width: deviceWidth,
-                            height: deviceHeight,
-                            opacity: 0.5,
-                            backgroundColor: 'black',
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                            position: 'absolute',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
                         }}>
-                        <ActivityIndicator
+                        <FontAwesome
+                            name="caret-left"
+                            size={FontSize.large * 1.5}
+                            color={Colors.textColorSecondary}
+                        />
+                        <Text
                             style={{
-                                borderRadius: 15,
-                                backgroundColor: null,
-                                width: 100,
-                                height: 100,
+                                color: Colors.textColorSecondary,
                                 alignSelf: 'center',
-                            }}
-                            animating={loading}
-                            size="large"
-                            color={Colors.lightPrimiryColor}
+                                fontSize: FontSize.large,
+                                fontWeight: 'bold',
+                            }}>
+                            {'ย้อนกลับ'}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        width: deviceWidth / 4,
+                        height: deviceWidth / 12,
+                        justifyContent: 'center',
+                        margin: 10,
+                        borderRadius: 20,
+                        flexDirection: 'column',
+                        padding: 10,
+                        backgroundColor: Colors.picking,
+                    }}
+                    onPress={() => navigation.dispatch(
+                        navigation.replace('SD_Info', { name: 'บันทึกรายละเอียดงานส่งมอบ', data: {} })
+                    )}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                        }}>
+                        <Text
+                            style={{
+                                color: Colors.textColorSecondary,
+                                alignSelf: 'center',
+                                fontSize: FontSize.large,
+                                fontWeight: 'bold',
+                            }}>
+                            {'รับงาน'}
+                        </Text>
+                        <FontAwesome
+                            name="caret-right"
+                            size={FontSize.large * 1.5}
+                            color={Colors.textColorSecondary}
                         />
                     </View>
-                )}
-            </SafeAreaView>
+                </TouchableOpacity>
+            </View>
+            {loading && (
+                <View style={{
+                    width: deviceWidth,
+                    height: deviceHeight,
+                    opacity: 0.5,
+                    backgroundColor: 'black',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    position: 'absolute',
+                }}>
+                    <ActivityIndicator
+                        style={{
+                            borderRadius: 15,
+                            backgroundColor: null,
+                            width: 100,
+                            height: 100,
+                            alignSelf: 'center',
+                        }}
+                        animating={loading}
+                        size="large"
+                        color={Colors.darkPrimiryColor}
+                    />
+                </View>
+            )}
+
         </>
     );
 };
@@ -460,6 +505,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         flexDirection: 'column',
+        backgroundColor: Colors.backgroundColor
     },
     image: {
         flex: 1,
@@ -477,14 +523,19 @@ const styles = StyleSheet.create({
         padding: 12,
         paddingLeft: 20,
         alignItems: 'center',
-        backgroundColor: Colors.backgroundLoginColor,
+        backgroundColor: Colors.picking,
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
-    textTitle: {
+    textTitle1: {
         fontSize: FontSize.medium,
         fontWeight: 'bold',
         color: Colors.fontColor,
+    },
+    textTitle2: {
+        fontSize: FontSize.medium,
+        fontWeight: 'bold',
+        color: Colors.buttonTextColor,
     },
     imageIcon: {
         width: 30,
@@ -501,7 +552,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
         padding: 5,
         alignItems: 'center',
-        backgroundColor: Colors.buttonColorPrimary,
+        backgroundColor: Colors.textColorSecondary,
         borderRadius: 10,
     },
     textButton: {
@@ -528,4 +579,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default nextDelivery;
+export default NextDelivery;

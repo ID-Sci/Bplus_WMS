@@ -45,19 +45,21 @@ import { FontSize } from '../components/FontSizeHelper';
 
 import * as loginActions from '../src/actions/loginActions';
 import * as registerActions from '../src/actions/registerActions';
-import * as databaseActions from '../src/actions/databaseActions';
+import * as dataActions from '../src/actions/dataActions';
 
 import Colors from '../src/Colors';
 import { fontSize, fontWeight } from 'styled-system';
+import { Icon } from 'react-native-paper/lib/typescript/components/Avatar/Avatar';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const MainScreen = () => {
+const Mains = ({ route }) => {
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const dataReducer = useSelector(({ dataReducer }) => dataReducer);
   const registerReducer = useSelector(({ registerReducer }) => registerReducer);
   const loginReducer = useSelector(({ loginReducer }) => loginReducer);
   const databaseReducer = useSelector(({ databaseReducer }) => databaseReducer);
@@ -90,6 +92,9 @@ const MainScreen = () => {
   const [username, setUsername] = useState(loginReducer.userloggedIn == true ? loginReducer.userNameED : '');
   const [password, setPassword] = useState(loginReducer.userloggedIn == true ? loginReducer.passwordED : '');
 
+
+
+
   const [data, setData] = useStateIfMounted({
     secureTextEntry: true,
   });
@@ -98,7 +103,12 @@ const MainScreen = () => {
 
   useEffect(() => {
     console.log('>> machineNum :', registerReducer.machineNum + '\n\n\n\n')
-  }, [registerReducer.machineNum]);
+    closeLoading()
+  }, [registerReducer?.machineNum])
+
+  useEffect(() => {
+    console.log(`Picking > ${dataReducer.Picking}`)
+  }, [])
 
   const closeLoading = () => {
     setLoading(false);
@@ -108,7 +118,7 @@ const MainScreen = () => {
   };
 
   const logOut = async () => {
-    setLoading(true)
+    letsLoading()
     await fetch(databaseReducer.Data.urlser + '/DevUsers', {
       method: 'POST',
       body: JSON.stringify({
@@ -123,7 +133,7 @@ const MainScreen = () => {
     })
       .then((response) => response.json())
       .then((json) => {
-        setLoading(false)
+        closeLoading()
         if (json && json.ResponseCode == '635') {
           Alert.alert(
             Language.t('alert.errorTitle'),
@@ -136,7 +146,7 @@ const MainScreen = () => {
         } else if (json && json.ResponseCode == '200') {
 
           navigation.dispatch(
-            navigation.replace('LoginScreen')
+            navigation.replace('Login')
           )
         } else {
           Alert.alert(
@@ -146,7 +156,7 @@ const MainScreen = () => {
       })
       .catch((error) => {
         console.error('ERROR at _fetchGuidLogin' + error);
-        setLoading(false)
+        closeLoading()
         if (databaseReducer.Data.urlser == '') {
           Alert.alert(
             Language.t('alert.errorTitle'),
@@ -157,132 +167,199 @@ const MainScreen = () => {
             Language.t('alert.internetError'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
         }
       });
-
-  };
+  }
 
   return (
-<>
-<StatusBar hidden={true} />
-<View style={tabbar}>
-          <View style={{ flexDirection: 'row' }}>
+    <>
+      <StatusBar hidden={true} />
+      <View style={tabbar}>
+        <View style={{ flexDirection: 'row' }}>
+          <Text
+            style={{
 
-            <Text
-              style={{
-                marginLeft: 12,
-                fontSize: FontSize.medium,
-                fontWeight: 'bold',
-                color: Colors.backgroundLoginColorSecondary,
-              }}> {`ระบบการจัดการคลังสินค้า`}</Text>
-          </View>
-          <View>
-
-          </View>
-            
+              fontSize: FontSize.medium,
+              fontWeight: 'bold',
+              color: Colors.fontColor,
+            }}> {`ระบบการจัดการคลังสินค้า`}</Text>
         </View>
-    <SafeAreaView>
-     
+        <View>
+          <TouchableOpacity
+            style={{
+              width: 80,
+              paddingRight: 10,
+              alignItems: 'center'
+            }}
+            onPress={() => logOut()}>
+            <FontAwesomeIcon name="power-off" size={40} color={'red'} />
+          </TouchableOpacity>
+        </View>
+
+      </View>
 
       < >
+        <View style={{ flexDirection: 'row', }}>
+          <View width={deviceWidth / 2} height={deviceHeight - 70} borderWidth={1}>
+            <View style={{
+              backgroundColor: Colors.putAway,
+              flexDirection: 'column',
+              shadowColor: Colors.borderColor,
+              height: 70,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1
+            }}>
+              <Text style={{
+                color: Colors.fontColor2,
+                alignSelf: 'center',
+                fontSize: FontSize.large,
+                fontWeight: 'bold'
+              }}>Put-away</Text>
+            </View>
+            <ScrollView>
+              {dataReducer.PutAway.length > 0 ? dataReducer.PutAway.map((PutAwayItem) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.dispatch(
+                        navigation.replace('NAJ', { name: 'Put-away', data: PutAwayItem })
+                      )
+                    }
+                    style={{
+                      backgroundColor: Colors.putAwayItem,
+                      height: 70,
+                      borderBottomColor: Colors.fontColor2,
+                      borderBottomWidth: 1,
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <View style={{ marginLeft: 20 }}>
+                        <Text style={{
+                          color: 'black',
+                          alignSelf: 'center',
+                          fontSize: FontSize.large,
+                          fontWeight: 'bold'
+                        }}>JOB {PutAwayItem.WS_KEY}</Text>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
- 
+                      <View style={{ marginRight: 20 }}>
+                        <Text style={{
+                          color: 'black',
+                          alignSelf: 'center',
+                          fontSize: FontSize.large,
+                          fontWeight: 'bold'
+                        }}> {PutAwayItem.SKU_BARCODE}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
 
-        <ScrollView>
-          <View  style={container1}>
-            <View style={{marginTop:deviceWidth/10}}></View>
-            <View width={deviceWidth/2} >
-              <TouchableOpacity
-
-                onPress={() => navigation.navigate('nextArchiveJob', { name: 'Put-away', data: '' })}
-                style={{
-                  backgroundColor: Colors.backgroundLoginColorSecondary,
-                  flexDirection: 'column',
-                  margin: 10,
-                  borderRadius: 10,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  shadowColor: Colors.borderColor,
-                  shadowOffset: {
-                    width: 0,
-                    height: 6,
-                  },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 1.0,
-                  elevation: 15,
-                }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                  <View style={{ marginLeft: 20 }}>
-                    <Text style={{
-                      color: 'black',
-                      alignSelf: 'center',
-                      fontSize: FontSize.large,
-                      fontWeight: 'bold'
-                    }}>Put-away</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-          
-              <TouchableOpacity
-                onPress={() => navigation.navigate('nextDelivery', { name: 'Picking', data: {} })}
-                style={{
-                  backgroundColor: Colors.backgroundLoginColorSecondary,
-                  flexDirection: 'column',
-                  margin: 10,
-                  borderRadius: 10,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  shadowColor: Colors.borderColor,
-                  shadowOffset: {
-                    width: 0,
-                    height: 6,
-                  },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 1.0,
-                  elevation: 15,
-                }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                  <View style={{ marginLeft: 20 }}>
-                    <Text style={{
-                      color: 'black',
-                      alignSelf: 'center',
-                      fontSize: FontSize.large,
-                      fontWeight: 'bold'
-                    }}>Picking</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            
-
-              <TouchableNativeFeedback
-                onPress={() => logOut()}>
+                )
+              }) : (
                 <View
                   style={{
-                    margin: 10,
-                    borderRadius: 20,
+
+                    height: 70,
+                    borderBottomColor: Colors.fontColor2,
+                    borderBottomWidth: 1,
+                    justifyContent: 'center',
                     flexDirection: 'column',
-                    padding: 10,
-                    backgroundColor: 'red',
                   }}>
-                  <Text
-                    style={{
-                      color: Colors.buttonTextColor,
-                      alignSelf: 'center',
-                      fontSize: FontSize.large,
-                      fontWeight: 'bold',
-                    }}>
-                    {'ออกจากระบบ'}
-                  </Text>
+                  <Text style={{
+                    color: Colors.backgroundColor,
+                    alignSelf: 'center',
+                    fontSize: FontSize.large,
+                    fontWeight: 'bold'
+                  }}>ไม่มีข้อมูล</Text>
                 </View>
-              </TouchableNativeFeedback>
-            </View>
-          <></>
+
+              )}
+
+
+
+            </ScrollView>
+
           </View>
-        </ScrollView>
+          <View width={deviceWidth / 2} height={deviceHeight - 70} borderWidth={1}>
+            <View style={{
+              backgroundColor: Colors.picking,
+              flexDirection: 'column',
+              shadowColor: Colors.borderColor,
+              height: 70,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1,
+            }}>
+              <Text style={{
+                color: Colors.fontColor2,
+                alignSelf: 'center',
+                fontSize: FontSize.large,
+                fontWeight: 'bold'
+              }}>Picking</Text>
+            </View>
+            <ScrollView>
+              {dataReducer.Picking.length > 0 ? dataReducer.Picking.map((PickingItem) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.dispatch(
+                        navigation.replace('ND', { name: 'Put-Picking', data: PickingItem })
+                      )}
+
+                    style={{
+                      backgroundColor: Colors.pickingItem,
+                      height: 70,
+                      borderBottomColor: Colors.fontColor2,
+                      borderBottomWidth: 1,
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <View style={{ marginLeft: 20 }}>
+                        <Text style={{
+                          color: 'black',
+                          alignSelf: 'center',
+                          fontSize: FontSize.large,
+                          fontWeight: 'bold'
+                        }}>JOB {PickingItem.WS_KEY}</Text>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                      <View style={{ marginRight: 20 }}>
+                        <Text style={{
+                          color: 'black',
+                          alignSelf: 'center',
+                          fontSize: FontSize.large,
+                          fontWeight: 'bold'
+                        }}> {PickingItem.SKU_BARCODE}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )
+              }) : (
+                <View
+                  style={{
+
+                    height: 70,
+                    borderBottomColor: Colors.fontColor2,
+                    borderBottomWidth: 1,
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                  }}>
+                  <Text style={{
+                    color: Colors.backgroundColor,
+                    alignSelf: 'center',
+                    fontSize: FontSize.large,
+                    fontWeight: 'bold'
+                  }}>ไม่มีข้อมูล</Text>
+                </View>
+
+              )}
+            </ScrollView>
+          </View>
+        </View>
       </ >
 
       {loading && (
@@ -307,25 +384,23 @@ const MainScreen = () => {
             }}
             animating={loading}
             size="large"
-            color={Colors.lightPrimiryColor}
+            color={Colors.darkPrimiryColor}
           />
         </View>
-      )}
-
-
-    </SafeAreaView>
+      )
+      }
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container1: {
-    paddingTop:20,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
 
+    backgroundColor: Colors.backgroundColor
   },
   image: {
     flex: 1,
@@ -343,8 +418,7 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingLeft: 20,
     alignItems: 'center',
-    backgroundColor: Colors.backgroundLoginColor,
-
+    backgroundColor: Colors.darkPrimiryColor,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
@@ -400,4 +474,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default MainScreen;
+export default Mains;

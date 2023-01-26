@@ -25,9 +25,12 @@ import {
 
 
 import LoginScreen from './screens/LoginScreen';
-import Mains  from './screens/MainScreen';
+import Mains from './screens/MainScreen';
 import ScanQRScreen from './screens/ScanQRScreen';
 import Splashs from './screens/splashSs';
+
+import MenuArchiveJob from './screens/menuArchiveJob_Screen';
+import MenuDelivery from './screens/menuDelivery_Screen';
 
 import NextArchiveJob from './screens/ArchiveJob/nextArchiveJob_Screen';
 import ArchiveJobInfo from './screens/ArchiveJob/archiveJobInfo_Screen';
@@ -58,7 +61,7 @@ const App = () => {
       <LoginStack.Navigator>
         <LoginStack.Screen
           options={{ headerShown: false }}
-          name="Login"
+          name="LoginScreen"
           component={LoginScreen}
         />
 
@@ -106,6 +109,11 @@ const App = () => {
 
               <MainStack.Screen
                 options={{ headerShown: false }}
+                name="MAJ"
+                component={MenuArchiveJob}
+              />
+              <MainStack.Screen
+                options={{ headerShown: false }}
                 name="NAJ"
                 component={NextArchiveJob}
               />
@@ -118,6 +126,11 @@ const App = () => {
                 options={{ headerShown: false }}
                 name="SAJ_Info"
                 component={SaveArchiveJobInfo}
+              />
+              <MainStack.Screen
+                options={{ headerShown: false }}
+                name="MD"
+                component={MenuDelivery}
               />
               <MainStack.Screen
                 options={{ headerShown: false }}

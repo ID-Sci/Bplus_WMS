@@ -164,6 +164,7 @@
     "skip": "Skip",
     "next": "Next",
     "ok": "Ok",
+    "refute": "Refute",
     "incorrect ":"Incorrect information",
     "savesucceed": "Save the information successfully.",
     "succeed":"Succeed",
@@ -185,6 +186,8 @@
     "invalid":"The QR_CODE is invalid",
     "notfound":"QR_CODE not found",
     "UnableConnec":"Unable to connect to the system",
+    "UnableConnec1": "Unable to connect to",
+    "UnableConnec2": "",
     "Alert": "There is already information in the system.",
     "Alert2": "Want to edit ",
     "Alert3": "There is this information in the system. Can't save data.",
@@ -219,5 +222,16 @@
     "back": "Back",
     "next": "Next",
     "select": " Please Select"
+  },
+  "error_ser": {
+    "607": "Machine Over Limit",
+    "608": "Un Register Machine",
+    "609": "User ID Not Found Or Wrong",
+    "500": "Internal Server Error",
+    "605": "Invalid Service ID",
+    "610": "Not Login",
+    "614": "Table Name Not Found",
+    "617": "No License Or License Expire",
+    "629": "Function Parameter Required "
   }
 }

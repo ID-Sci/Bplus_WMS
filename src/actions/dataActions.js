@@ -3,6 +3,7 @@ import {
   ACTION_PUTAWAY,
   ACTION_NEXTPICKING,
   ACTION_NEXTPUTAWAY,
+  ACTION_NEXTJOB
 } from '../Constants';
 
 export const setPicking = (payload) => ({
@@ -19,5 +20,9 @@ export const setNextPicking = (payload) => ({
 })
 export const setNextPutAway = (payload) => ({
   type: ACTION_NEXTPUTAWAY,
+  payload,
+})
+export const setNextJOB = (payload) => ({
+  type: ACTION_NEXTJOB,
   payload,
 })

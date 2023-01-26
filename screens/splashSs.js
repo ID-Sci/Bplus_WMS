@@ -41,6 +41,8 @@ const Splashs = ({ route }) => {
   const [loading, setLoading] = useStateIfMounted(false);
   const [countdown, setCountdown] = useState(defaultCountDown);
   let checkAndroidPermission = true
+  let tempPutAway = []
+  let tempPicking = []
   const closeLoading = () => {
     setLoading(false);
   };
@@ -58,25 +60,31 @@ const Splashs = ({ route }) => {
     }
   });
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log('>> machineNum :', registerReducer.machineNum + '\n\n\n\n')
 
-    getData()
-    closeLoading()
+    await getData()
+    await closeLoading()
 
 
-  }, [registerReducer.machineNum]);
+  }, []);
 
   const getData = async () => {
-    await getPicking('')
-    await getPutAway('')
+    var nai = route.params
+    console.log(nai.data)
+    if (nai.data == 'MAJ')
+      await getPutAway('')
+    if (nai.data == 'MD')
+      await getPicking('')
+
     await navigation.dispatch(
-      navigation.replace('Main', {})
+      navigation.replace(nai.data, {})
     )
+
   }
   const getPicking = async (WS_TAG) => {
     letsLoading()
-    let tempPicking = dataReducer.Picking
+
 
     await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
       method: 'POST',
@@ -113,10 +121,13 @@ const Splashs = ({ route }) => {
                 tempPicking.push(responseData.NEXTPICKING[i])
                 TAG = responseData.NEXTPICKING[i].WS_TAG
               }
-              await dispatch(dataActions.setPicking(tempPicking));
+
+
               if (tempPicking.length < responseData.RECORD_COUNT) {
                 console.log(tempPicking.length)
                 await getPicking(TAG)
+              } else {
+                await dispatch(dataActions.setPicking(tempPicking));
               }
             }
           }
@@ -140,9 +151,10 @@ const Splashs = ({ route }) => {
         }
       })
   }
+
   const getPutAway = async (WS_TAG) => {
     letsLoading()
-    let tempPutAway = dataReducer.PutAway
+
 
     await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
       method: 'POST',
@@ -179,10 +191,14 @@ const Splashs = ({ route }) => {
                 tempPutAway.push(responseData.NEXTSTORAGE[i])
                 TAG = responseData.NEXTSTORAGE[i].WS_TAG
               }
-              await dispatch(dataActions.setPutAway(tempPutAway));
+
+
               if (tempPutAway.length < responseData.RECORD_COUNT) {
                 console.log(tempPutAway.length)
                 await getPutAway(TAG)
+              } else {
+                await dispatch(dataActions.setPutAway(tempPutAway));
+
               }
             }
           }
@@ -226,13 +242,23 @@ const Splashs = ({ route }) => {
           style={{
             width: deviceWidth,
             height: deviceHeight,
-            opacity: 0.5,
-            backgroundColor: 'black',
+            backgroundColor: Colors.backgroundColor,
             alignSelf: 'center',
             justifyContent: 'center',
             alignContent: 'center',
             position: 'absolute',
           }}>
+             <View>
+                <TouchableNativeFeedback>
+                  <Image
+                    style={{  width: null,
+                      height: 200,}}
+                    resizeMode={'contain'}
+                    source={require('../img/2.5.png')}
+                  />
+                </TouchableNativeFeedback>
+
+              </View>
           <ActivityIndicator
             style={{
               borderRadius: 15,
@@ -287,7 +313,7 @@ const styles = StyleSheet.create({
     //padding: 16,
   },
   tabbar: {
-    height: 70,
+    height: FontSize.medium * 3,
     padding: 12,
     paddingLeft: 20,
     alignItems: 'center',

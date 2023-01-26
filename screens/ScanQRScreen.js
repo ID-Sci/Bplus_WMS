@@ -24,6 +24,7 @@ const deviceHeight = Dimensions.get('window').height;
 const ScanQRScreen = ({ route }) => {
   const defaultCountDown = 1;
   let clockCall = null;
+  var qrcode = require('qrcode-terminal');
   const navigation = useNavigation();
   const [countdown, setCountdown] = useState(defaultCountDown);
   let checkAndroidPermission = true
@@ -51,10 +52,20 @@ const ScanQRScreen = ({ route }) => {
   };
 
   var a = 0
+
   useEffect(() => {
     a = Math.floor(100000 + Math.random() * 900000);
     console.log(route.params, ' code: ', a)
+
+    // route.params.key && route.params.key == 'SKU_CODE' && qrcode.generate(route.params.SKU_CODE)
+    // route.params.key && route.params.key == 'WS_TAG' && qrcode.generate(route.params.WS_TAG)
+    // route.params.key && route.params.key == 'WL_CODE' && qrcode.generate(route.params.WL_CODE)
   }, [])
+
+  useEffect(() => {
+    if (route.params.key == '')
+      console.log()
+  }, [route.params?.key])
 
   if (Platform.OS === 'android' && Platform.Version < 23) {
     checkAndroidPermission = false
@@ -64,9 +75,19 @@ const ScanQRScreen = ({ route }) => {
     if (e && e.data) {
 
       let result = e.data
-     
+
       console.log(result)
-      navigation.navigate(route.params.route, { post: result, data: route.params.data,  code: Math.floor(100000 + Math.random() * 900000) });
+      navigation.navigate(route.params.route,
+        {
+          post: result,
+          data: route.params.data,
+          key: route.params.key,
+          SKU_CODE: route.params.key == 'SKU_CODE' ? result : route.params.SKU_CODE,
+          WS_TAG: route.params.key == 'WS_TAG' ? result : route.params.WS_TAG,
+          WL_CODE: route.params.key == 'WL_CODE' ? result : route.params.WL_CODE,
+          code: Math.floor(100000 + Math.random() * 900000)
+        }
+      );
 
     }
 
@@ -226,9 +247,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'flex-start',
     flex: 1,
-    marginVertical: 10,
+
     paddingLeft: 5,
-    marginHorizontal: 5,
+
     //padding: 16,
   },
   buttonTouchable2: {
@@ -240,7 +261,7 @@ const styles = StyleSheet.create({
     //padding: 16,
   },
   tabbar: {
-    height: 70,
+    height: FontSize.medium * 3,
     padding: 12,
     paddingLeft: 20,
     alignItems: 'center',

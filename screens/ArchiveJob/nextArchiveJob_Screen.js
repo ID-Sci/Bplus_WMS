@@ -73,7 +73,7 @@ const NextArchiveJob = ({ route }) => {
     } = styles;
 
 
-
+    var qrcode = require('qrcode-terminal');
     const [GUID, setGUID] = useStateIfMounted('');
 
     const [isSelected, setSelection] = useState(loginReducer.userloggedIn == true ? loginReducer.userloggedIn : false);
@@ -98,9 +98,11 @@ const NextArchiveJob = ({ route }) => {
         if (route.params.data)
             setparamData(route.params.data)
         console.log(paramData)
+
         //backsakura013
     }, [route.params?.data]);
     useEffect(() => {
+
         if (route.params.post || route.params.code) {
             setparamPost(route.params.post)
             _C_WS_TAG(route.params.post)
@@ -116,6 +118,7 @@ const NextArchiveJob = ({ route }) => {
     }, [route.params?.code && route.params.code]);
     useEffect(() => {
         console.log(paramData)
+
         //backsakura013
     }, [paramData]);
     useEffect(() => {
@@ -139,18 +142,97 @@ const NextArchiveJob = ({ route }) => {
             'รหัสพาเล็ทไม่ถูกต้อง', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
     };
     const _STARTSTORAGE = async () => {
-        letsLoading()
-
+        // letsLoading()
+        let objItem = {
+            name: 'SAJ_Info',
+            data: paramData
+        }
+        await dispatch(dataActions.setNextJOB(objItem))
+        await navigation.dispatch(
+            navigation.replace('SAJ_Info', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: paramData })
+        )
         // navigation.dispatch(
         //     navigation.replace('SAJ_Info', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: paramData })
         // )
 
+        // await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
+        //     method: 'POST',
+        //     body: JSON.stringify({
+        //         'BPAPUS-BPAPSV': loginReducer.serviceID,
+        //         'BPAPUS-LOGIN-GUID': loginReducer.guid,
+        //         'BPAPUS-FUNCTION': 'STARTSTORAGE',
+        //         'BPAPUS-PARAM':
+        //             '{"FORK_CODE": "' +
+        //             databaseReducer.Data.ForkCode +
+        //             '","WS_TAG": "' +
+        //             paramData.WS_TAG +
+        //             '","WS_KEY": "' +
+        //             paramData.WS_KEY +
+        //             '","WS_PICKER": "' +
+        //             loginReducer.userNameED +
+        //             '"}',
+        //         'BPAPUS-FILTER': '',
+        //         'BPAPUS-ORDERBY': '',
+        //         'BPAPUS-OFFSET': '0',
+        //         'BPAPUS-FETCH': '0'
+        //     }),
+        // })
+        //     .then((response) => response.json())
+        //     .then(async (json) => {
+        //         if (json && json.ResponseCode == '635') {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 Language.t('alert.errorDetail'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //             console.log('NOT FOUND MEMBER');
+        //         } else if (json && json.ResponseCode == '629') {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 'Function Parameter Required', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //         } else if (json && json.ResponseCode == '200') {
+        //             let responseData = JSON.parse(json.ResponseData)
+        //             console.log(responseData)
+        //             let objItem = {
+        //                 name: 'SAJ_Info',
+        //                 data: paramData
+        //             }
+        //             await dispatch(dataActions.setNextJOB(objItem))
+        //             Alert.alert(
+        //                 Language.t('notiAlert.header'),
+        //                 'รับงานสำเร็จ', [{
+        //                     text: Language.t('alert.ok'), onPress: () =>
+        //                         navigation.dispatch(
+        //                             navigation.replace('SAJ_Info', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: paramData })
+        //                         )
+        //                 }]);
+        //         } else {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //             );
+        //         }
+        //         closeLoading()
+        //     })
+        //     .catch((error) => {
+        //         console.error('ERROR at _fetchGuidLogin' + error);
+        //         closeLoading()
+        //         if (databaseReducer.Data.urlser == '') {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 Language.t('selectBase.error'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //         } else {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 Language.t('alert.internetError'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //         }
+        //     })
+    }
+    const _CANCELSTORAGE = async () => {
+        letsLoading()
         await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
             method: 'POST',
             body: JSON.stringify({
                 'BPAPUS-BPAPSV': loginReducer.serviceID,
                 'BPAPUS-LOGIN-GUID': loginReducer.guid,
-                'BPAPUS-FUNCTION': 'STARTSTORAGE',
+                'BPAPUS-FUNCTION': 'CANCELSTORAGE',
                 'BPAPUS-PARAM':
                     '{"FORK_CODE": "' +
                     databaseReducer.Data.ForkCode +
@@ -158,8 +240,6 @@ const NextArchiveJob = ({ route }) => {
                     paramData.WS_TAG +
                     '","WS_KEY": "' +
                     paramData.WS_KEY +
-                    '","WS_PICKER": "' +
-                    loginReducer.userNameED +
                     '"}',
                 'BPAPUS-FILTER': '',
                 'BPAPUS-ORDERBY': '',
@@ -181,16 +261,11 @@ const NextArchiveJob = ({ route }) => {
                 } else if (json && json.ResponseCode == '200') {
                     let responseData = JSON.parse(json.ResponseData)
                     console.log(responseData)
+                    await dispatch(dataActions.setNextJOB({}))
+                    await navigation.dispatch(
+                        navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดเก็บ', data: 'MAJ' }))
 
-                    await dispatch(dataActions.setNextPutAway(paramData))
-                    Alert.alert(
-                        Language.t('notiAlert.header'),
-                        'รับงานสำเร็จ', [{
-                            text: Language.t('alert.ok'), onPress: () =>
-                                navigation.dispatch(
-                                    navigation.replace('SAJ_Info', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: paramData })
-                                )
-                        }]);
+
                 } else {
                     Alert.alert(
                         Language.t('alert.errorTitle'),
@@ -212,7 +287,6 @@ const NextArchiveJob = ({ route }) => {
                 }
             })
     }
-
     return (
         <>
             <StatusBar hidden={true} />
@@ -225,7 +299,7 @@ const NextArchiveJob = ({ route }) => {
                             fontSize: FontSize.medium,
                             fontWeight: 'bold',
                             color: Colors.fontColor2,
-                        }}> {route.params.name && (`${route.params.name}`)}</Text>
+                        }}> {'Put-away'}</Text>
                 </View>
                 <View>
 
@@ -239,30 +313,31 @@ const NextArchiveJob = ({ route }) => {
             }}>
                 <ScrollView  >
                     < View style={container1} >
-                        <View width={deviceWidth / 1.5} style={{
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                            backgroundColor: Colors.buttonTextColor
-                        }}>
+                        <View width={deviceWidth > 960 ? deviceWidth / 1.5 : deviceWidth * 0.8}
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignContent: 'center',
+                                backgroundColor: Colors.buttonTextColor
+                            }}>
                             <View style={{
                                 paddingTop: 10,
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                                 marginBottom: 5
                             }}>
-                                <View width={deviceWidth / 6} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2} >
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle1}>
                                             รหัสพาเล็ท :
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 2}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.7}>
                                     <View style={{}}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <TextInput
-                                                width={deviceWidth / 2.5}
+                                                width={deviceWidth > 960 ? deviceWidth / 2.5 : deviceWidth * 0.5}
                                                 style={{
                                                     borderBottomColor: Colors.putAwayItem,
                                                     color: Colors.darkPrimiryColor,
@@ -278,7 +353,7 @@ const NextArchiveJob = ({ route }) => {
                                                 onChangeText={(val) => {
                                                     setparamPost(val)
                                                 }}></TextInput>
-                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanQR', { route: 'NAJ', data: paramData })}>
+                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanQR', { route: 'NAJ', key: 'WS_TAG', data: paramData })}>
                                                 <FontAwesome
                                                     name="qrcode"
                                                     size={FontSize.medium * 2}
@@ -292,17 +367,18 @@ const NextArchiveJob = ({ route }) => {
 
                             <View style={{
                                 paddingTop: 10,
+                                paddingBottom: 10,
                                 justifyContent: 'space-between',
                                 flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAwayItem,
                             }}>
-                                <View width={deviceWidth / 6}>
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             รหัสสินค้า :
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 2}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.7}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             {paramData.SKU_CODE}
@@ -315,14 +391,14 @@ const NextArchiveJob = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAwayItem,
                             }}>
-                                <View width={deviceWidth / 6}>
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             ชื่อสินค้า :
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 2}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.7}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             {paramData.SKU_NAME}
@@ -333,11 +409,11 @@ const NextArchiveJob = ({ route }) => {
                         </View>
                         <View>
                             <View style={{
-
+                                width: deviceWidth > 960 ? deviceWidth / 1.5 : deviceWidth * 0.8,
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 3} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.4} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
                                             รหัสอ้างอิง
@@ -349,7 +425,7 @@ const NextArchiveJob = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.4}>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1} >
                                             รหัสบาร์โค้ด
@@ -367,10 +443,40 @@ const NextArchiveJob = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 3} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.4} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
-                                            รหัสตำแหน่งเก็บ
+                                            จากรหัสตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.FROM_WL_CODE}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.4}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            จากตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.FROMWL_NAME}
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                            <View style={{
+                                paddingTop: 10,
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.4} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
+                                        <Text style={styles.textTitle2}>
+                                            ไปรหัสตำแหน่งเก็บ
                                         </Text>
                                     </View>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
@@ -379,10 +485,10 @@ const NextArchiveJob = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
-                                        <Text style={styles.textTitle1}>
-                                            ชื่อตำแหน่งเก็บ
+                                < View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.4}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
+                                        <Text style={styles.textTitle2}>
+                                            ไปตำแหน่งเก็บ
                                         </Text>
                                     </View>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
@@ -393,11 +499,11 @@ const NextArchiveJob = ({ route }) => {
                                 </View >
                             </View>
                             <View style={{
-                                paddingTop: 10,
+
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 6} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             กลุ่ม
@@ -409,7 +515,7 @@ const NextArchiveJob = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 6}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2}>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             แถว
@@ -422,7 +528,7 @@ const NextArchiveJob = ({ route }) => {
                                     </View>
                                 </View >
 
-                                <View width={deviceWidth / 6} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             ชั้น
@@ -434,7 +540,7 @@ const NextArchiveJob = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 6}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2}>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             ช่อง
@@ -473,9 +579,7 @@ const NextArchiveJob = ({ route }) => {
                         backgroundColor: Colors.buttonColorPrimary,
 
                     }}
-                    onPress={() => navigation.dispatch(
-                        navigation.replace('Splashs', {})
-                    )}>
+                    onPress={() => _CANCELSTORAGE()}>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -493,7 +597,7 @@ const NextArchiveJob = ({ route }) => {
                                 fontSize: FontSize.large,
                                 fontWeight: 'bold',
                             }}>
-                            {'ย้อนกลับ'}
+                            {'ยกเลิก'}
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -521,7 +625,7 @@ const NextArchiveJob = ({ route }) => {
                                 fontSize: FontSize.large,
                                 fontWeight: 'bold',
                             }}>
-                            {'รับงาน'}
+                            {'ต่อไป'}
                         </Text>
                         <FontAwesome
                             name="caret-right"
@@ -582,7 +686,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     tabbar: {
-        height: 70,
+        height: FontSize.medium * 3,
         padding: 12,
         paddingLeft: 20,
         alignItems: 'center',

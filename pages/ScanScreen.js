@@ -249,21 +249,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'flex-start',
     flex: 1,
-    marginVertical: 10,
+   
     paddingLeft: 5,
-    marginHorizontal: 5,
+    
     //padding: 16,
   },
   buttonTouchable2: {
     alignSelf: 'flex-end',
-    marginVertical: 10,
-    marginHorizontal: 5,
+    
 
     //flex:1
     //padding: 16,
   },
   tabbar: {
-    height: 70,
+    height: FontSize.medium * 3,
     padding: 12,
     paddingLeft: 20,
     alignItems: 'center',

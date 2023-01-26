@@ -42,18 +42,19 @@ import { useSelector, connect, useDispatch } from 'react-redux';
 import { Language, changeLanguage } from '../../translations/I18n';
 import { FontSize } from '../../components/FontSizeHelper';
 
-
 import * as loginActions from '../../src/actions/loginActions';
 import * as registerActions from '../../src/actions/registerActions';
 import * as databaseActions from '../../src/actions/databaseActions';
 
+import * as dataActions from '../../src/actions/dataActions';
+
 import Colors from '../../src/Colors';
-import { borderColor, fontSize, fontWeight } from 'styled-system';
+import { color, colorStyle, fontSize, fontWeight, padding } from 'styled-system';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const NextDelivery = ({ route }) => {
+const nextDelivery = ({ route }) => {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -92,12 +93,36 @@ const NextDelivery = ({ route }) => {
     });
     const [paramData, setparamData] = useState({});
 
+    const [WS_TAG, setWS_TAG] = useState('');
+    const [SKU_CODE, setSKU_CODE] = useState('');
+
+    useEffect(() => {
+        if (route.params.code) {
+            console.log(`----------------------------------------------------------------`)
+            console.log(`code > ${route.params.code}`)
+            console.log(`key > ${route.params.key}`)
+            console.log(`WS_TAG > ${route.params.WS_TAG}`)
+            console.log(`SKU_CODE > ${route.params.SKU_CODE}`)
+            console.log(`----------------------------------------------------------------`)
+            setWS_TAG(route.params.WS_TAG)
+            setSKU_CODE(route.params.SKU_CODE)
+            if (route.params.key == 'WS_TAG')
+                _C_WS_TAG(route.params.WS_TAG)
+            else if (route.params.key == 'SKU_CODE')
+                _C_SKU_CODE(route.params.SKU_CODE)
+        }
+        console.log(paramData)
+        //backsakura013
+    }, [route.params?.code]);
     useEffect(() => {
         if (route.params.data)
             setparamData(route.params.data)
         console.log(paramData)
-        //backsakura013
     }, [route.params?.data]);
+    useEffect(() => {
+        console.log(paramData)
+        //backsakura013
+    }, [paramData]);
     useEffect(() => {
         console.log('>> machineNum :', registerReducer.machineNum + '\n\n\n\n')
     }, [registerReducer.machineNum]);
@@ -109,23 +134,136 @@ const NextDelivery = ({ route }) => {
         setLoading(true);
     };
 
-    const logOut = async () => {
-        setLoading(true)
-        await fetch(databaseReducer.Data.urlser + '/DevUsers', {
+    const _C_WS_TAG = (WS_TAG) => {
+        if (paramData.WS_TAG == WS_TAG)
+            Alert.alert(
+                Language.t('notiAlert.header'),
+                'รหัสพาเล็ทถูกต้อง', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        else Alert.alert(
+            Language.t('notiAlert.header'),
+            'รหัสพาเล็ทไม่ถูกต้อง', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+    }
+
+    const _C_SKU_CODE = (SKU_CODE) => {
+        console.log(`${paramData.SKU_CODE} == ${SKU_CODE}`)
+        if (paramData.SKU_CODE == SKU_CODE)
+            Alert.alert(
+                Language.t('notiAlert.header'),
+                'รหัสสินค้าถูกต้อง', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        else Alert.alert(
+            Language.t('notiAlert.header'),
+            'รหัสสินค้าไม่ถูกต้อง', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+    }
+    const _STARTPICKING = async () => {
+        // letsLoading()
+        let objItem = {
+            name: 'SD_Info',
+            data: paramData
+        }
+        await dispatch(dataActions.setNextJOB(objItem))
+
+        await navigation.dispatch(
+            navigation.replace('SD_Info', { name: 'อ่านรายละเอียดงานจัดส่ง', data: paramData })
+        )
+
+        // navigation.dispatch(
+        //     navigation.replace('SAJ_Info', { name: 'บันทึกรายละเอียดงานจัดเก็บ', data: paramData })
+        // )
+
+        // await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
+        //     method: 'POST',
+        //     body: JSON.stringify({
+        //         'BPAPUS-BPAPSV': loginReducer.serviceID,
+        //         'BPAPUS-LOGIN-GUID': loginReducer.guid,
+        //         'BPAPUS-FUNCTION': 'STARTPICKING',
+        //         'BPAPUS-PARAM':
+        //             '{"FORK_CODE": "' +
+        //             databaseReducer.Data.ForkCode +
+        //             '","WS_TAG": "' +
+        //             paramData.WS_TAG +
+        //             '","WS_KEY": "' +
+        //             paramData.WS_KEY +
+        //             '","WS_PICKER": "' +
+        //             loginReducer.userNameED +
+        //             '"}',
+        //         'BPAPUS-FILTER': '',
+        //         'BPAPUS-ORDERBY': '',
+        //         'BPAPUS-OFFSET': '0',
+        //         'BPAPUS-FETCH': '0'
+        //     }),
+        // })
+        //     .then((response) => response.json())
+        //     .then(async (json) => {
+        //         if (json && json.ResponseCode == '635') {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 Language.t('alert.errorDetail'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //             console.log('NOT FOUND MEMBER');
+        //         } else if (json && json.ResponseCode == '629') {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 'Function Parameter Required', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //         } else if (json && json.ResponseCode == '200') {
+        //             let responseData = JSON.parse(json.ResponseData)
+        //             console.log(responseData)
+        //             let objItem = {
+        //                 name: 'SD_Info',
+        //                 data: paramData
+        //             }
+        //             await dispatch(dataActions.setNextJOB(objItem))
+        //             Alert.alert(
+        //                 Language.t('notiAlert.header'),
+        //                 'รับงานสำเร็จ', [{
+        //                     text: Language.t('alert.ok'), onPress: () =>
+        //                         navigation.dispatch(
+        //                             navigation.replace('SD_Info', { name: 'อ่านรายละเอียดงานจัดส่ง', data: paramData })
+        //                         )
+        //                 }]);
+        //         } else {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //             );
+        //         }
+        //         closeLoading()
+        //     })
+        //     .catch((error) => {
+        //         console.error('ERROR at _fetchGuidLogin' + error);
+        //         closeLoading()
+        //         if (databaseReducer.Data.urlser == '') {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 Language.t('selectBase.error'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //         } else {
+        //             Alert.alert(
+        //                 Language.t('alert.errorTitle'),
+        //                 Language.t('alert.internetError'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        //         }
+        //     })
+    }
+    const _CANCELPICKING = async () => {
+        letsLoading()
+        await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
             method: 'POST',
             body: JSON.stringify({
                 'BPAPUS-BPAPSV': loginReducer.serviceID,
-                'BPAPUS-LOGIN-GUID': '',
-                'BPAPUS-FUNCTION': 'UnRegister',
+                'BPAPUS-LOGIN-GUID': loginReducer.guid,
+                'BPAPUS-FUNCTION': 'CANCELPICKING',
                 'BPAPUS-PARAM':
-                    '{"BPAPUS-MACHINE": "' +
-                    registerReducer.machineNum +
-                    '" }',
+                    '{"FORK_CODE": "' +
+                    databaseReducer.Data.ForkCode +
+                    '","WS_TAG": "' +
+                    paramData.WS_TAG +
+                    '","WS_KEY": "' +
+                    paramData.WS_KEY +
+                    '"}',
+                'BPAPUS-FILTER': '',
+                'BPAPUS-ORDERBY': '',
+                'BPAPUS-OFFSET': '0',
+                'BPAPUS-FETCH': '0'
             }),
         })
             .then((response) => response.json())
-            .then((json) => {
-                setLoading(false)
+            .then(async (json) => {
                 if (json && json.ResponseCode == '635') {
                     Alert.alert(
                         Language.t('alert.errorTitle'),
@@ -136,19 +274,24 @@ const NextDelivery = ({ route }) => {
                         Language.t('alert.errorTitle'),
                         'Function Parameter Required', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
                 } else if (json && json.ResponseCode == '200') {
+                    let responseData = JSON.parse(json.ResponseData)
+                    console.log(responseData)
+                    await dispatch(dataActions.setNextJOB({}))
 
-                    navigation.dispatch(
-                        navigation.replace('Login')
-                    )
+                    await navigation.dispatch(
+                        navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดส่ง', data: 'MD' }))
+
+
                 } else {
                     Alert.alert(
                         Language.t('alert.errorTitle'),
                     );
                 }
+                closeLoading()
             })
             .catch((error) => {
                 console.error('ERROR at _fetchGuidLogin' + error);
-                setLoading(false)
+                closeLoading()
                 if (databaseReducer.Data.urlser == '') {
                     Alert.alert(
                         Language.t('alert.errorTitle'),
@@ -158,44 +301,39 @@ const NextDelivery = ({ route }) => {
                         Language.t('alert.errorTitle'),
                         Language.t('alert.internetError'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
                 }
-            });
-
-    };
-
+            })
+    }
     return (
         <>
             <StatusBar hidden={true} />
-
             <View style={tabbar}>
                 <View style={{ flexDirection: 'row' }}>
 
                     <Text
                         style={{
-                            marginLeft: 12,
+
                             fontSize: FontSize.medium,
                             fontWeight: 'bold',
                             color: Colors.fontColor2,
                         }}> {route.params.name && (`${route.params.name}`)}</Text>
                 </View>
                 <View>
-
                 </View>
             </View>
             <SafeAreaView style={{
                 flex: 1,
                 backgroundColor: Colors.backgroundColor
             }}>
-                <ScrollView>
+                <ScrollView  >
                     < View style={container1} >
-                        <View width={deviceWidth / 2} style={{
-                            marginTop: 20,
+                        <View width={deviceWidth / 1.5} style={{
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignContent: 'center',
                             backgroundColor: Colors.buttonTextColor
                         }}>
                             <View style={{
-
+                                paddingTop: 10,
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
 
@@ -203,28 +341,31 @@ const NextDelivery = ({ route }) => {
                                 <View width={deviceWidth / 6} >
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle1}>
-                                            ตำแหน่งเก็บ :
+                                            รหัสพาเล็ท :
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
+                                < View width={deviceWidth / 2}>
                                     <View style={{}}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <TextInput
-                                                width={deviceWidth / 3.5}
+                                                width={deviceWidth / 2.5}
                                                 style={{
                                                     borderBottomColor: Colors.picking,
-                                                    color: Colors.fontColor,
+                                                    color: Colors.darkPrimiryColor,
                                                     fontSize: FontSize.medium,
                                                     borderBottomWidth: 1,
                                                 }}
                                                 placeholderTextColor={Colors.picking}
-                                                placeholder={'ตำแหน่งเก็บ ..'}
-                                                value={''}
+                                                placeholder={'รหัสพาเล็ท ..'}
+                                                value={WS_TAG}
+                                                onFocus={() => setWS_TAG('')}
+
+                                                onSubmitEditing={(val) => _C_WS_TAG(WS_TAG)}
                                                 onChangeText={(val) => {
-                                                    console.log(val)
+                                                    setWS_TAG(val)
                                                 }}></TextInput>
-                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
+                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanQR', { route: 'ND', key: 'WS_TAG', data: paramData, SKU_CODE: SKU_CODE, WS_TAG: WS_TAG })}>
                                                 <FontAwesome
                                                     name="qrcode"
                                                     size={FontSize.medium * 2}
@@ -235,164 +376,183 @@ const NextDelivery = ({ route }) => {
                                     </View>
                                 </View >
                             </View>
-                            <View style={{
 
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
 
-                            }}>
-                                <View width={deviceWidth / 6} >
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle1}>
-                                            รหัสสินค้า :
-                                        </Text>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 3}>
-                                    <View style={{}}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TextInput
-                                                width={deviceWidth / 3.5}
-                                                style={{
-                                                    borderBottomColor: Colors.picking,
-                                                    color: Colors.fontColor,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 1,
-                                                }}
-                                                placeholderTextColor={Colors.picking}
-                                                placeholder={'รหัสสินค้า ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
-                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
-                                                <FontAwesome
-                                                    name="qrcode"
-                                                    size={FontSize.medium * 2}
-                                                    color={Colors.picking}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View >
-                            </View>
-                            <View style={{
-                                marginTop: 10,
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
 
-                            }}>
-                                <View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
-                                        <Text style={styles.textTitle1}>
-                                            บล๊อค
-                                        </Text>
-                                    </View>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                        <Text style={styles.textTitle1}>
-                                            xxx
-                                        </Text>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
-                                        <Text style={styles.textTitle1}>
-                                            แถว
-                                        </Text>
-                                    </View>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                        <Text style={styles.textTitle1}>
-                                            xxx
-                                        </Text>
-                                    </View>
-                                </View >
-                                < View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
-                                        <Text style={styles.textTitle1}>
-                                            ชั้น
-                                        </Text>
-                                    </View>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                        <Text style={styles.textTitle1}>
-                                            xxx
-                                        </Text>
-                                    </View>
-                                </View >
-                            </View>
-                            <View style={{
-                                paddingTop: 10,
-                                justifyContent: 'space-between',
-                                flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking,
-                            }}>
-                                <View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle2}>
-                                            รหัสสินค้า :
-                                        </Text>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 3}>
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle2}>
-                                            xxxxx
-                                        </Text>
-                                    </View>
-                                </View >
-                            </View>
-                            <View style={{
-                                paddingTop: 10,
-                                justifyContent: 'space-between',
-                                flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking,
-                            }}>
-                                <View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle2}>
-                                            ชื่อสินค้า :
-                                        </Text>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 3}>
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle2}>
-                                            xxxxxx
-                                        </Text>
-                                    </View>
-                                </View >
-                            </View>
                         </View>
                         <View style={{
-                            marginTop: 20,
+                            paddingTop: 10,
+                            paddingBottom: 10,
                             justifyContent: 'space-between',
-                            flexDirection: 'row',
+                            flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking,
                         }}>
-                            <View width={deviceWidth / 4} >
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
-                                    <Text style={styles.textTitle1}>
-                                        หน่วย
-                                    </Text>
-                                </View>
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                    <Text style={styles.textTitle1}>
-                                        xxxx
+                            <View width={deviceWidth / 6}>
+                                <View style={{ padding: 10, }}>
+                                    <Text style={styles.textTitle2}>
+                                        ชื่อสินค้า :
                                     </Text>
                                 </View>
                             </ View>
-                            < View width={deviceWidth / 4}>
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
-                                    <Text style={styles.textTitle1}>
-                                        จำนวน
-                                    </Text>
-                                </View>
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                    <Text style={styles.textTitle1}>
-                                        xxxxx
+                            < View width={deviceWidth / 2}>
+                                <View style={{ padding: 10, }}>
+                                    <Text style={styles.textTitle2}>
+                                        {paramData.SKU_NAME}
                                     </Text>
                                 </View>
                             </View >
                         </View>
+                        <View>
+                            <View style={{
+
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 3} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            รหัสอ้างอิง
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.DI_REF}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1} >
+                                            รหัสบาร์โค้ด
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3} >
+                                            {paramData.SKU_BARCODE}
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 3} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            จากรหัสตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.FROM_WL_CODE}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            จากตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.FROMWL_NAME}
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 3} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            ไปรหัสตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.TOWL_CODE}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            ไปตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.TO_WL_NAME}
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                            <View style={{
+                                paddingTop: 10,
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 6} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
+                                        <Text style={styles.textTitle2}>
+                                            กลุ่ม
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.WL_BLOCK}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
+                                        <Text style={styles.textTitle2}>
+                                            แถว
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.WL_ROW}
+                                        </Text>
+                                    </View>
+                                </View >
+
+                                <View width={deviceWidth / 6} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
+                                        <Text style={styles.textTitle2}>
+                                            ชั้น
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.WL_LEVEL}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 6}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
+                                        <Text style={styles.textTitle2}>
+                                            ช่อง
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.WL_COLUMN}
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                        </View>
+
                     </View>
+
                 </ScrollView>
+
             </SafeAreaView>
+
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -409,9 +569,9 @@ const NextDelivery = ({ route }) => {
                         flexDirection: 'column',
                         padding: 10,
                         backgroundColor: Colors.buttonColorPrimary,
+
                     }}
-                    onPress={() => navigation.dispatch(
-                        navigation.replace('Splashs'))}>
+                    onPress={() => _CANCELPICKING()}>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -442,11 +602,9 @@ const NextDelivery = ({ route }) => {
                         borderRadius: 20,
                         flexDirection: 'column',
                         padding: 10,
-                        backgroundColor: Colors.picking,
+                        backgroundColor: paramData.WS_TAG == WS_TAG ? Colors.picking : Colors.textColorSecondary,
                     }}
-                    onPress={() => navigation.dispatch(
-                        navigation.replace('SD_Info', { name: 'บันทึกรายละเอียดงานส่งมอบ', data: {} })
-                    )}>
+                    onPress={() => paramData.WS_TAG == WS_TAG ? _STARTPICKING() : console.log()}>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -469,43 +627,46 @@ const NextDelivery = ({ route }) => {
                     </View>
                 </TouchableOpacity>
             </View>
-            {loading && (
-                <View style={{
-                    width: deviceWidth,
-                    height: deviceHeight,
-                    opacity: 0.5,
-                    backgroundColor: 'black',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    alignContent: 'center',
-                    position: 'absolute',
-                }}>
-                    <ActivityIndicator
-                        style={{
-                            borderRadius: 15,
-                            backgroundColor: null,
-                            width: 100,
-                            height: 100,
-                            alignSelf: 'center',
-                        }}
-                        animating={loading}
-                        size="large"
-                        color={Colors.darkPrimiryColor}
-                    />
-                </View>
-            )}
 
+            {
+                loading && (
+                    <View
+                        style={{
+                            width: deviceWidth,
+                            height: deviceHeight,
+                            opacity: 0.5,
+                            backgroundColor: 'black',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            position: 'absolute',
+                        }}>
+                        <ActivityIndicator
+                            style={{
+                                borderRadius: 15,
+                                backgroundColor: null,
+                                width: 100,
+                                height: 100,
+                                alignSelf: 'center',
+                            }}
+                            animating={loading}
+                            size="large"
+                            color={Colors.darkPrimiryColor}
+                        />
+                    </View>
+                )
+            }
         </>
     );
 };
 
 const styles = StyleSheet.create({
     container1: {
-        backgroundColor: '#fff',
         alignItems: 'center',
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: Colors.backgroundColor
+
+        padding: 20
     },
     image: {
         flex: 1,
@@ -519,13 +680,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     tabbar: {
-        height: 70,
+        height: FontSize.medium * 3,
         padding: 12,
         paddingLeft: 20,
         alignItems: 'center',
         backgroundColor: Colors.picking,
         justifyContent: 'space-between',
         flexDirection: 'row',
+    },
+    textTitle: {
+        fontSize: FontSize.medium,
+        fontWeight: 'bold',
+        color: Colors.fontColor,
     },
     textTitle1: {
         fontSize: FontSize.medium,
@@ -536,6 +702,11 @@ const styles = StyleSheet.create({
         fontSize: FontSize.medium,
         fontWeight: 'bold',
         color: Colors.buttonTextColor,
+    },
+    textTitle3: {
+        fontSize: FontSize.medium,
+        fontWeight: 'bold',
+        color: Colors.picking,
     },
     imageIcon: {
         width: 30,
@@ -552,7 +723,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
         padding: 5,
         alignItems: 'center',
-        backgroundColor: Colors.textColorSecondary,
+        backgroundColor: Colors.buttonColorPrimary,
         borderRadius: 10,
     },
     textButton: {
@@ -569,9 +740,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     checkbox: {
+
         alignSelf: "center",
         borderBottomColor: Colors.fontColor,
         color: Colors.fontColor,
+
     },
     label: {
         margin: 8,
@@ -579,4 +752,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default NextDelivery;
+
+export default nextDelivery

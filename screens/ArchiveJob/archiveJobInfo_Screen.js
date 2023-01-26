@@ -134,7 +134,7 @@ const ArchiveJobInfo = ({ route }) => {
                         Language.t('alert.errorTitle'),
                         'Function Parameter Required', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
                 } else if (json && json.ResponseCode == '200') {
-
+                    dispatch(loginActions.guid(''))
                     navigation.dispatch(
                         navigation.replace('Login')
                     )
@@ -237,8 +237,7 @@ const ArchiveJobInfo = ({ route }) => {
                 <View style={container1}>
                     <ScrollView >
                         < >
-
-                            <View style={{ width: deviceWidth / 2, paddingBottom: 40 }}>
+                            <View style={{ width: deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.8, paddingBottom: 40 }}>
                                 <View>
                                     < >
                                         <View style={{ marginTop: 10 }}>
@@ -830,7 +829,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     tabbar: {
-        height: 70,
+        height: FontSize.medium * 3,
         padding: 12,
         paddingLeft: 20,
         alignItems: 'center',

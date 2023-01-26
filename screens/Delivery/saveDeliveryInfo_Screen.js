@@ -18,7 +18,6 @@ import {
     ScrollView,
     TouchableNativeFeedback,
     TouchableOpacity,
-
 } from 'react-native';
 
 import CheckBox from '@react-native-community/checkbox';
@@ -49,17 +48,20 @@ import * as loginActions from '../../src/actions/loginActions';
 import * as registerActions from '../../src/actions/registerActions';
 import * as databaseActions from '../../src/actions/databaseActions';
 
+import * as dataActions from '../../src/actions/dataActions';
+
+
 import Colors from '../../src/Colors';
 import { fontSize, fontWeight } from 'styled-system';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const SaveDeliveryInfo = ({ route }) => {
+const saveDeliveryInfo = ({ route }) => {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
-
+    const dataReducer = useSelector(({ dataReducer }) => dataReducer);
     const registerReducer = useSelector(({ registerReducer }) => registerReducer);
     const loginReducer = useSelector(({ loginReducer }) => loginReducer);
     const databaseReducer = useSelector(({ databaseReducer }) => databaseReducer);
@@ -74,7 +76,7 @@ const SaveDeliveryInfo = ({ route }) => {
     } = styles;
 
 
-    const [modalVisible, setModalVisible] = useState(false);
+
     const [GUID, setGUID] = useStateIfMounted('');
 
     const [isSelected, setSelection] = useState(loginReducer.userloggedIn == true ? loginReducer.userloggedIn : false);
@@ -92,42 +94,83 @@ const SaveDeliveryInfo = ({ route }) => {
     const [data, setData] = useStateIfMounted({
         secureTextEntry: true,
     });
-    const [checked, setChecked] = useState(false);
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+
     const [paramData, setparamData] = useState({});
+    const [paramPost, setparamPost] = useState('');
+    const [tempPost, settempPost] = useState('');
     useEffect(() => {
-        if (route.params.data)
-            setparamData(route.params.data)
+        if (dataReducer.nextJOB && dataReducer.nextJOB.data)
+            setparamData(dataReducer.nextJOB.data)
         console.log(paramData)
         //backsakura013
     }, [route.params?.data]);
     useEffect(() => {
+        if (route.params.post || route.params.code) {
+            setparamPost(route.params.post)
+            _C_WL_CODE(route.params.post)
+            settempPost(route.params.post)
+            console.log(route.params.code)
+        } else if (tempPost.length > 0) {
+            setparamPost(tempPost)
+            _C_WL_CODE(tempPost)
+            console.log(route.params.code)
+        }
+
+
+    }, [route.params?.code && route.params.code]);
+    useEffect(() => {
+        console.log(paramData)
+        //backsakura013
+    }, [paramData]);
+    useEffect(() => {
         console.log('>> machineNum :', registerReducer.machineNum + '\n\n\n\n')
     }, [registerReducer.machineNum]);
-
     const closeLoading = () => {
         setLoading(false);
     };
+
     const letsLoading = () => {
         setLoading(true);
     };
 
-    const logOut = async () => {
-        setLoading(true)
-        await fetch(databaseReducer.Data.urlser + '/DevUsers', {
+    const _C_WL_CODE = (TOWL_CODE) => {
+        console.log('TOWL_CODE ' + paramData.TOWL_CODE)
+        if (paramData.TOWL_CODE == TOWL_CODE)
+            Alert.alert(
+                Language.t('notiAlert.header'),
+                'รหัสตำแหน่งเก็บถูกต้อง', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+        else Alert.alert(
+            Language.t('notiAlert.header'),
+            'รหัสตำแหน่งเก็บไม่ถูกต้อง', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+    };
+
+    const _CANCELPICKING = async () => {
+        letsLoading()
+        await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
             method: 'POST',
             body: JSON.stringify({
                 'BPAPUS-BPAPSV': loginReducer.serviceID,
-                'BPAPUS-LOGIN-GUID': '',
-                'BPAPUS-FUNCTION': 'UnRegister',
+                'BPAPUS-LOGIN-GUID': loginReducer.guid,
+                'BPAPUS-FUNCTION': 'CANCELPICKING',
                 'BPAPUS-PARAM':
-                    '{"BPAPUS-MACHINE": "' +
-                    registerReducer.machineNum +
-                    '" }',
+                    '{"FORK_CODE": "' +
+                    databaseReducer.Data.ForkCode +
+                    '","WS_TAG": "' +
+                    paramData.WS_TAG +
+                    '","WS_KEY": "' +
+                    paramData.WS_KEY +
+                    '"}',
+                'BPAPUS-FILTER': '',
+                'BPAPUS-ORDERBY': '',
+                'BPAPUS-OFFSET': '0',
+                'BPAPUS-FETCH': '0'
             }),
         })
             .then((response) => response.json())
-            .then((json) => {
-                setLoading(false)
+            .then(async (json) => {
                 if (json && json.ResponseCode == '635') {
                     Alert.alert(
                         Language.t('alert.errorTitle'),
@@ -138,19 +181,28 @@ const SaveDeliveryInfo = ({ route }) => {
                         Language.t('alert.errorTitle'),
                         'Function Parameter Required', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
                 } else if (json && json.ResponseCode == '200') {
+                    let responseData = JSON.parse(json.ResponseData)
+                    console.log(responseData)
+                    await dispatch(dataActions.setNextJOB({}))
+                    Alert.alert(
+                        Language.t('notiAlert.header'),
+                        'ยกเลิกสำเร็จ', [{
+                            text: Language.t('alert.ok'), onPress: () =>
+                                navigation.dispatch(
+                                    navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดส่ง', data: 'MD' }))
+                        }
+                    ]);
 
-                    navigation.dispatch(
-                        navigation.replace('Login')
-                    )
                 } else {
                     Alert.alert(
                         Language.t('alert.errorTitle'),
                     );
                 }
+                closeLoading()
             })
             .catch((error) => {
                 console.error('ERROR at _fetchGuidLogin' + error);
-                setLoading(false)
+                closeLoading()
                 if (databaseReducer.Data.urlser == '') {
                     Alert.alert(
                         Language.t('alert.errorTitle'),
@@ -160,152 +212,117 @@ const SaveDeliveryInfo = ({ route }) => {
                         Language.t('alert.errorTitle'),
                         Language.t('alert.internetError'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
                 }
-            });
+            })
+    }
 
-    };
+    const _FINISHPICKING = async () => {
+        letsLoading()
+        console.log(paramData.TO_WL_NAME)
+        await fetch(databaseReducer.Data.urlser + '/PickAndPack', {
+            method: 'POST',
+            body: JSON.stringify({
+                'BPAPUS-BPAPSV': loginReducer.serviceID,
+                'BPAPUS-LOGIN-GUID': loginReducer.guid,
+                'BPAPUS-FUNCTION': 'FINISHPICKING',
+                'BPAPUS-PARAM':
+                    '{"FORK_CODE": "' +
+                    databaseReducer.Data.ForkCode +
+                    '","WS_TAG": "' +
+                    paramData.WS_TAG +
+                    '","WS_KEY": "' +
+                    paramData.WS_KEY +
+                    '","WS_PICKER": "' +
+                    loginReducer.userNameED +
+                    '"}',
+                'BPAPUS-FILTER': '',
+                'BPAPUS-ORDERBY': '',
+                'BPAPUS-OFFSET': '0',
+                'BPAPUS-FETCH': '0'
+            }),
+        })
+            .then((response) => response.json())
+            .then(async (json) => {
+                if (json && json.ResponseCode == '635') {
+                    Alert.alert(
+                        Language.t('alert.errorTitle'),
+                        Language.t('alert.errorDetail'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+                    console.log('NOT FOUND MEMBER');
+                } else if (json && json.ResponseCode == '629') {
+                    Alert.alert(
+                        Language.t('alert.errorTitle'),
+                        'Function Parameter Required', [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+                } else if (json && json.ResponseCode == '200') {
+                    let responseData = JSON.parse(json.ResponseData)
+                    console.log(responseData)
+                    await dispatch(dataActions.setNextJOB({}))
+                    await dispatch(dataActions.setPicking([]))
+                    Alert.alert(
+                        Language.t('notiAlert.header'),
+                        'จัดเก็บสำเร็จ', [{
+                            text: Language.t('alert.ok'), onPress: () =>
+                            navigation.dispatch(
+                                navigation.replace('Main', {})
+                              )
+                                // navigation.dispatch(
+                                //     navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดส่ง', data: 'MD' }))
+                        }
+                    ]);
+
+                } else {
+                    Alert.alert(
+                        Language.t('alert.errorTitle'),
+                    );
+                }
+                closeLoading()
+            })
+            .catch((error) => {
+                console.error('ERROR at _fetchGuidLogin' + error);
+                closeLoading()
+                if (databaseReducer.Data.urlser == '') {
+                    Alert.alert(
+                        Language.t('alert.errorTitle'),
+                        Language.t('selectBase.error'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+                } else {
+                    Alert.alert(
+                        Language.t('alert.errorTitle'),
+                        Language.t('alert.internetError'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+                }
+            })
+    }
 
     return (
         <>
             <StatusBar hidden={true} />
+
             <View style={tabbar}>
                 <View style={{ flexDirection: 'row' }}>
+
                     <Text
                         style={{
                             marginLeft: 12,
                             fontSize: FontSize.medium,
-                            color: Colors.fontColor2,
                             fontWeight: 'bold',
+                            color: Colors.fontColor2,
                         }}> {route.params.name && (`${route.params.name}`)}</Text>
                 </View>
                 <View>
+
                 </View>
+
             </View>
+
             <SafeAreaView style={{
                 flex: 1,
                 backgroundColor: Colors.backgroundColor
             }}>
-                <ScrollView  >
+                <ScrollView>
                     < View style={container1} >
-                        <View width={deviceWidth / 2} style={{
-
-                            backgroundColor: Colors.fontColor2
-                        }} >
-                            <View style={{
-                                paddingTop: 10,
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-
-                            }}>
-                                <View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle1}>
-                                            ตำแหน่งเก็บ :
-                                        </Text>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 3}>
-                                    <View style={{}}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TextInput
-                                                width={deviceWidth / 3.5}
-                                                style={{
-                                                    borderBottomColor: Colors.picking,
-                                                    color: Colors.fontColor,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.picking}
-                                                placeholder={'ตำแหน่งเก็บ ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
-                                        </View>
-                                    </View>
-                                </View >
-                            </View>
-                            <View style={{
-                                paddingTop: 10,
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-                            }}>
-                                <View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle1}>
-                                            อ่านตำแหน่งเก็บ :
-                                        </Text>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 3}>
-                                    <View style={{}}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TextInput
-                                                width={deviceWidth / 3.5}
-                                                style={{
-                                                    borderBottomColor: Colors.picking,
-                                                    color: Colors.fontColor,
-                                                    fontSize: FontSize.medium,
-                                                    borderBottomWidth: 0.7,
-                                                }}
-                                                placeholderTextColor={Colors.picking}
-                                                placeholder={'อ่านตำแหน่งเก็บ ..'}
-                                                value={''}
-                                                onChangeText={(val) => {
-                                                    console.log(val)
-                                                }}></TextInput>
-                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Scan', { route: 'Select' })}>
-                                                <FontAwesome
-                                                    name="qrcode"
-                                                    size={FontSize.medium * 2}
-                                                    color={Colors.picking}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View >
-                            </View>
-                            <View style={{
-                                marginTop: 10,
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-                            }}>
-                                <View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
-                                        <Text style={styles.textTitle1}>
-                                            บล๊อค
-                                        </Text>
-                                    </View>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                        <Text style={styles.textTitle1}>
-                                            xxx
-                                        </Text>
-                                    </View>
-                                </ View>
-                                < View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
-                                        <Text style={styles.textTitle1}>
-                                            แถว
-                                        </Text>
-                                    </View>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                        <Text style={styles.textTitle1}>
-                                            xxx
-                                        </Text>
-                                    </View>
-                                </View >
-                                < View width={deviceWidth / 6}>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.pickingItem }}>
-                                        <Text style={styles.textTitle1}>
-                                            ชั้น
-                                        </Text>
-                                    </View>
-                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                        <Text style={styles.textTitle1}>
-                                            xxx
-                                        </Text>
-                                    </View>
-                                </View >
-                            </View>
+                        <View width={deviceWidth / 1.5} style={{
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            backgroundColor: Colors.buttonTextColor
+                        }}>
                             <View style={{
                                 paddingTop: 10,
                                 justifyContent: 'space-between',
@@ -318,10 +335,10 @@ const SaveDeliveryInfo = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
+                                < View width={deviceWidth / 2}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
-                                            xxxxx
+                                            {paramData.SKU_CODE}
                                         </Text>
                                     </View>
                                 </View >
@@ -338,248 +355,281 @@ const SaveDeliveryInfo = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
+                                < View width={deviceWidth / 2}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
-                                            xxxxxx
+                                            {paramData.SKU_NAME}
                                         </Text>
                                     </View>
                                 </View >
                             </View>
                         </View>
-                        <View style={{
-                            marginTop: 20,
-                            justifyContent: 'space-between',
-                            flexDirection: 'row',
-                        }}>
-                            <View width={deviceWidth / 4} >
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
-                                    <Text style={styles.textTitle1}>
-                                        หน่วย
-                                    </Text>
-                                </View>
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                    <Text style={styles.textTitle1}>
-                                        xxxx
-                                    </Text>
-                                </View>
-                            </ View>
-                            < View width={deviceWidth / 4}>
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
-                                    <Text style={styles.textTitle1}>
-                                        จำนวน
-                                    </Text>
-                                </View>
-                                <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
-                                    <Text style={styles.textTitle1}>
-                                        xxxxx
-                                    </Text>
-                                </View>
-                            </View >
-                        </View>
-                    </View>
-                    <View style={styles.centeredView}>
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={modalVisible}
-                            onRequestClose={() => {
-                                setModalVisible(!modalVisible);
+                        <View>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
                             }}>
-                            < TouchableOpacity
-                                onPress={() => setModalVisible(!modalVisible)}
-                                style={styles.centeredView}>
-                                <View>
-                                    <View style={styles.modalView}>
-                                        <View style={{
-                                            justifyContent: 'space-between',
-                                            flexDirection: 'row'
-                                        }}>
-                                            <View width={20}></View>
-                                            <Text style={{ fontSize: FontSize.large, color: Colors.fontColor2 }}>ส่งมอบไม่ได้</Text>
-                                            <Pressable style={{ alignItems: 'flex-end' }} onPress={() => setModalVisible(!modalVisible)}>
-                                                <FontAwesome name="close" color={Colors.fontColor2} size={FontSize.large} />
-                                            </Pressable>
-                                        </View>
-                                        <View style={{ backgroundColor: Colors.fontColor2, borderRadius: 20, padding: 20 }}>
-                                            <Text style={{
-                                                color: Colors.fontColor,
-                                                alignSelf: 'center',
-                                                fontSize: FontSize.large,
-                                                fontWeight: 'bold',
-                                            }}>
-                                                ไม่สามารถจัดเก็บได้ กรุณากด "ตกลง" เพื่อยกเลิกรายการ
-                                            </Text>
-                                            <View style={{ flexDirection: "row", alignSelf: 'center' }}>
-                                                <TouchableOpacity
-                                                    onPress={() =>  navigation.dispatch(
-                                                        navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดส่ง', data: {} }))}>
-                                                    <View
-                                                        style={{
-                                                            width: deviceWidth / 4.2,
-                                                            margin: 10,
-                                                            borderRadius: 20,
-                                                            flexDirection: 'column',
-                                                            alignSelf: 'center',
-                                                            padding: 20,
-                                                            backgroundColor: Colors.picking,
-                                                        }}>
-                                                        <Text
-                                                            style={{
-                                                                color: Colors.buttonTextColor,
-                                                                alignSelf: 'center',
-                                                                fontSize: FontSize.medium,
-                                                                fontWeight: 'bold',
-                                                            }}>
-                                                            {'ตกลง'}
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                                <TouchableOpacity
-                                                    onPress={() => setModalVisible(!modalVisible)}>
-                                                    <View
-                                                        style={{
-                                                            width: deviceWidth / 4.2,
-                                                            margin: 10,
-                                                            borderRadius: 20,
-                                                            flexDirection: 'column',
-                                                            alignSelf: 'center',
-                                                            padding: 20,
-                                                            backgroundColor: Colors.buttonColorPrimary,
-                                                        }}>
-                                                        <Text
-                                                            style={{
-                                                                color: Colors.buttonTextColor,
-                                                                alignSelf: 'center',
-                                                                fontSize: FontSize.medium,
-                                                                fontWeight: 'bold',
-                                                            }}>
-                                                            {'ยกเลิก'}
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
+                                <View width={deviceWidth / 3} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            รหัสอ้างอิง
+                                        </Text>
                                     </View>
-                                </View>
-                            </TouchableOpacity>
-                        </Modal>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.DI_REF}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1} >
+                                            รหัสบาร์โค้ด
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3} >
+                                            {paramData.SKU_BARCODE}
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
+                                <View width={deviceWidth / 3} >
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1}>
+                                            รหัสตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3}>
+                                            {paramData.TOWL_CODE}
+                                        </Text>
+                                    </View>
+                                </ View>
+                                < View width={deviceWidth / 3}>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
+                                        <Text style={styles.textTitle1} >
+                                            ชื่อตำแหน่งเก็บ
+                                        </Text>
+                                    </View>
+                                    <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.buttonTextColor }}>
+                                        <Text style={styles.textTitle3} >
+                                            {paramData.TO_WL_NAME}
+                                        </Text>
+                                    </View>
+                                </View >
+                            </View>
+                        </View>
                     </View>
                 </ScrollView>
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingTop: 20,
-                    backgroundColor: Colors.backgroundColor
-                }}>
-                    <TouchableOpacity
-                        onPress={() => setModalVisible(!modalVisible)}>
-                        <View
-                            style={{
-                                width: deviceWidth / 4,
-                                height: deviceWidth / 12,
-                                justifyContent: 'center',
-                                margin: 10,
-                                borderRadius: 20,
-                                flexDirection: 'column',
-                                padding: 10,
-                                backgroundColor: Colors.buttonColorPrimary,
-                            }}>
-                            <Text
-                                style={{
-                                    color: Colors.buttonTextColor,
-                                    alignSelf: 'center',
-                                    fontSize: FontSize.medium * 1.5,
-                                    fontWeight: 'bold',
-                                }}>
-                                {'ส่งไม่ได้'}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => navigation.dispatch(
-                            navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดส่ง', data: {} }))} >
-                        <View
-                            style={{
-                                width: deviceWidth / 4,
-                                height: deviceWidth / 12,
-                                justifyContent: 'center',
-                                margin: 10,
-                                borderRadius: 20,
-                                flexDirection: 'column',
-                                padding: 10,
-                                backgroundColor: Colors.picking,
-                            }}>
-                            <Text
-                                style={{
-                                    color: Colors.buttonTextColor,
-                                    alignSelf: 'center',
-                                    fontSize: FontSize.medium * 1.5,
-                                    fontWeight: 'bold',
-                                }}>
-                                {'จัดส่งได้'}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
+                <View style={styles.centeredView}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            setModalVisible(!modalVisible);
+                        }}>
+                        < TouchableOpacity
+                            onPress={() => setModalVisible(!modalVisible)}
+                            style={styles.centeredView}>
+                            <View>
+                                <View style={styles.modalView}>
+                                    <View style={{
+                                        justifyContent: 'space-between',
+                                        flexDirection: 'row'
+                                    }}>
+                                        <View width={20}></View>
+                                        <Text style={{ fontSize: FontSize.large, color: Colors.fontColor2 }}>จัดเก็บไม่ได้</Text>
+                                        <Pressable style={{ alignItems: 'flex-end' }} onPress={() => setModalVisible(!modalVisible)}>
+                                            <FontAwesome name="close" color={Colors.fontColor2} size={FontSize.large} />
+                                        </Pressable>
+                                    </View>
+                                    <View style={{ backgroundColor: Colors.fontColor2, borderRadius: 20, padding: 20 }}>
+                                        <Text style={{
+                                            color: Colors.fontColor,
+                                            alignSelf: 'center',
+                                            fontSize: FontSize.large,
+                                            fontWeight: 'bold',
+                                        }}>
+                                            ไม่สามารถจัดเก็บได้ กรุณากด "ตกลง" เพื่อยกเลิกรายการ
+                                        </Text>
+                                        <View style={{ flexDirection: "row", alignSelf: 'center' }}>
+                                            <TouchableOpacity
+                                                onPress={() => _CANCELPICKING()}>
+                                                <View
+                                                    style={{
+                                                        width: deviceWidth / 4.2,
+                                                        margin: 10,
+                                                        borderRadius: 20,
+                                                        flexDirection: 'column',
+                                                        alignSelf: 'center',
+                                                        padding: 20,
+                                                        backgroundColor: Colors.picking,
+                                                    }}>
+                                                    <Text
+                                                        style={{
+                                                            color: Colors.buttonTextColor,
+                                                            alignSelf: 'center',
+                                                            fontSize: FontSize.medium,
+                                                            fontWeight: 'bold',
+                                                        }}>
+                                                        {'ตกลง'}
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => setModalVisible(!modalVisible)}>
+                                                <View
+                                                    style={{
+                                                        width: deviceWidth / 4.2,
+                                                        margin: 10,
+                                                        borderRadius: 20,
+                                                        flexDirection: 'column',
+                                                        alignSelf: 'center',
+                                                        padding: 20,
+                                                        backgroundColor: Colors.buttonColorPrimary,
+                                                    }}>
+                                                    <Text
+                                                        style={{
+                                                            color: Colors.buttonTextColor,
+                                                            alignSelf: 'center',
+                                                            fontSize: FontSize.medium,
+                                                            fontWeight: 'bold',
+                                                        }}>
+                                                        {'ยกเลิก'}
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
 
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
                 </View>
-
-
             </SafeAreaView>
-            {loading && (
-                <View
-                    style={{
-                        width: deviceWidth,
-                        height: deviceHeight,
-                        opacity: 0.5,
-                        backgroundColor: 'black',
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        alignContent: 'center',
-                        position: 'absolute',
-                    }}>
-                    <ActivityIndicator
+
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingTop: 20,
+                backgroundColor: Colors.backgroundColor
+            }}>
+                <TouchableOpacity
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <View
                         style={{
-                            borderRadius: 15,
-                            backgroundColor: null,
-                            width: 100,
-                            height: 100,
-                            alignSelf: 'center',
-                        }}
-                        animating={loading}
-                        size="large"
-                        color={Colors.darkPrimiryColor}
-                    />
-                </View>
-            )}
-            {modalVisible && (
-                <View
+                            width: deviceWidth / 4,
+                            height: deviceWidth / 12,
+                            justifyContent: 'center',
+                            margin: 10,
+                            borderRadius: 20,
+                            flexDirection: 'column',
+                            padding: 10,
+                            backgroundColor: Colors.buttonColorPrimary,
+                        }}>
+                        <Text
+                            style={{
+                                color: Colors.buttonTextColor,
+                                alignSelf: 'center',
+                                fontSize: FontSize.medium * 1.5,
+                                fontWeight: 'bold',
+                            }}>
+                            {'เก็บไม่ได้'}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
                     style={{
-                        width: deviceWidth,
-                        height: deviceHeight,
-                        opacity: 0.5,
-                        backgroundColor: 'black',
-                        alignSelf: 'center',
+                        width: deviceWidth / 4,
+                        height: deviceWidth / 12,
                         justifyContent: 'center',
-                        alignContent: 'center',
-                        position: 'absolute',
-                    }}>
+                        margin: 10,
+                        borderRadius: 20,
+                        flexDirection: 'column',
+                        padding: 10,
+                        backgroundColor: Colors.picking,
+                        backgroundColor:  Colors.picking  ,
+                    }}
+                    onPress={() =>  _FINISHPICKING()   }>
 
-                </View>
-            )}
+                    <View>
+                        <Text
+                            style={{
+                                color: Colors.buttonTextColor,
+                                alignSelf: 'center',
+                                fontSize: FontSize.medium * 1.5,
+                                fontWeight: 'bold',
+                            }}>
+                            {'จัดเก็บได้'}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
 
+            </View>
+
+            {
+                loading && (
+                    <View
+                        style={{
+                            width: deviceWidth,
+                            height: deviceHeight,
+                            opacity: 0.5,
+                            backgroundColor: 'black',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            position: 'absolute',
+                        }}>
+                        <ActivityIndicator
+                            style={{
+                                borderRadius: 15,
+                                backgroundColor: null,
+                                width: 100,
+                                height: 100,
+                                alignSelf: 'center',
+                            }}
+                            animating={loading}
+                            size="large"
+                            color={Colors.picking}
+                        />
+                    </View>
+                )
+            }
+
+            {
+                modalVisible && (
+                    <View
+                        style={{
+                            width: deviceWidth,
+                            height: deviceHeight,
+                            opacity: 0.5,
+                            backgroundColor: 'black',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            position: 'absolute',
+                        }}>
+                    </View>
+                )
+            }
         </>
     );
 };
 
 const styles = StyleSheet.create({
     container1: {
-        backgroundColor: '#fff',
         paddingTop: 20,
         alignItems: 'center',
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: Colors.backgroundColor
     },
     image: {
         flex: 1,
@@ -593,13 +643,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     tabbar: {
-        height: 70,
+        height:  FontSize.medium * 3,
         padding: 12,
         paddingLeft: 20,
         alignItems: 'center',
         backgroundColor: Colors.picking,
         justifyContent: 'space-between',
         flexDirection: 'row',
+    },
+    textTitle: {
+        fontSize: FontSize.medium,
+        fontWeight: 'bold',
+        color: Colors.fontColor,
     },
     textTitle1: {
         fontSize: FontSize.medium,
@@ -610,6 +665,11 @@ const styles = StyleSheet.create({
         fontSize: FontSize.medium,
         fontWeight: 'bold',
         color: Colors.buttonTextColor,
+    },
+    textTitle3: {
+        fontSize: FontSize.medium,
+        fontWeight: 'bold',
+        color: Colors.picking,
     },
     imageIcon: {
         width: 30,
@@ -665,8 +725,7 @@ const styles = StyleSheet.create({
         width: deviceWidth / 1.5,
         shadowColor: "#000",
     },
-
 });
 
 
-export default SaveDeliveryInfo;
+export default saveDeliveryInfo;

@@ -3,6 +3,7 @@ import {
   ACTION_PUTAWAY,
   ACTION_NEXTPICKING,
   ACTION_NEXTPUTAWAY,
+  ACTION_NEXTJOB,
 } from '../Constants';
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   PutAway: [],
   nextPicking: {},
   nextPutAway: {},
+  nextJOB:{}
 }
 
 const dataReducer = (state = initialState, { type, payload }) => {
@@ -22,6 +24,8 @@ const dataReducer = (state = initialState, { type, payload }) => {
       return { ...state, nextPicking: payload }
     case ACTION_NEXTPUTAWAY:
       return { ...state, nextPutAway: payload }
+      case ACTION_NEXTJOB:
+        return { ...state, nextJOB: payload }
     default:
       return state;
   }

@@ -82,6 +82,7 @@ const ScanQRScreen = ({ route }) => {
           post: result,
           data: route.params.data,
           key: route.params.key,
+          name: route.params.name,
           SKU_CODE: route.params.key == 'SKU_CODE' ? result : route.params.SKU_CODE,
           WS_TAG: route.params.key == 'WS_TAG' ? result : route.params.WS_TAG,
           WL_CODE: route.params.key == 'WL_CODE' ? result : route.params.WL_CODE,
@@ -93,136 +94,101 @@ const ScanQRScreen = ({ route }) => {
 
   };
 
-  // const chooseFile = () => {
-  //   let options = {
-  //     title: Language.t('selectBase.SelectImg'),
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: 'images',
-  //     },
-  //   };
-  //   ImagePicker.launchImageLibrary(options, (response) => {
-  //     if (response.didCancel) {
-  //       console.log('response.didCancel');
-  //     } else if (response.error) {
-  //       console.log('response.error');
-  //     } else {
-  //       let path = null;
-  //       if (Platform.OS == 'android') {
-  //         path = response.assets[0].path;
-  //         if (!path) {
-  //           path = response.assets[0].uri;
-  //         }
-  //       } else {
-  //         path = response.path;
-  //         if (!path) {
-  //           path = response.uri;
-  //         }
-  //       }
-  //       QRreader(path)
-  //         .then((data) => {
-  //           if (data) {
-  //             let result = Base64.decode(Base64.decode(data)).split('|')
-  //             if (result[0].indexOf('.dll') == -1) {
-  //               Alert.alert(Language.t('alert.errorTitle'), Language.t('selectBase.invalid'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+  const chooseFile = () => {
+    let options = {
+      title: Language.t('selectBase.SelectImg'),
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('response.didCancel');
+      } else if (response.error) {
+        console.log('response.error');
+      } else {
+        let path = null;
+        if (Platform.OS == 'android') {
+          path = response.assets[0].path;
+          if (!path) {
+            path = response.assets[0].uri;
+          }
+        } else {
+          path = response.path;
+          if (!path) {
+            path = response.uri;
+          }
+        }
 
-  //             } else {
-  //               let tempurl = result[0].split('.dll')
-  //               let serurl = tempurl[0] + '.dll'
-  //               let tempnmae = serurl.split('/')
-  //               let urlnmae = null;
-  //               for (var s in tempnmae) if (tempnmae[s].search('.dll') > -1) urlnmae = tempnmae[s].split('.dll')
-  //               let newObj = { label: serurl, value: urlnmae[0] };
-  //               navigation.navigate(route.params.route, { post: newObj, data: a });
-  //             }
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
 
-  //     }
-  //   });
-  // };
+        QRreader(path)
+          .then((data) => {
+            if (data) {
+              let result = Base64.decode(Base64.decode(data)).split('|')
+              if (result[0].indexOf('.dll') == -1) {
+                Alert.alert(Language.t('alert.errorTitle'), Language.t('selectBase.invalid'), [{ text: Language.t('alert.ok'), onPress: () => console.log('OK Pressed') }]);
+
+              } else {
+                let tempurl = result[0].split('.dll')
+                let serurl = tempurl[0] + '.dll'
+                let tempnmae = serurl.split('/')
+                let urlnmae = null;
+                for (var s in tempnmae) if (tempnmae[s].search('.dll') > -1) urlnmae = tempnmae[s].split('.dll')
+                let newObj = { label: serurl, value: urlnmae[0] };
+                navigation.navigate(route.params.route, { post: newObj, data: a });
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+      }
+    });
+  };
 
   return (
-    <>
-      <View
-        style={styles.tabbar}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-          style={styles.buttonTouchable1}>
-          <Icon name="angle-left" size={30} color={'black'} />
-          <Text style={styles.buttonText}>
-            {'ย้อนกลับ'}
-          </Text>
-        </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={chooseFile}
-          style={styles.buttonTouchable2}>
-          <Text style={styles.buttonText}>
-            {Language.t('selectBase.SelectImg')}
-          </Text>
-        </TouchableOpacity> */}
-      </View>
-      <View>
-        <QRCodeScanner
-          checkAndroid6Permissions={checkAndroidPermission}
-          onRead={onSuccess}
-          cameraType={'back'}
-          fadeIn={true}
-          reactivate={true}
-        />
-      </View>
-      <View
-        style={{
-          marginTop: 70,
-          width: deviceWidth,
-          height: deviceHeight - 70,
-          opacity: 0.5,
-          alignSelf: 'center',
-          justifyContent: 'center',
-          alignContent: 'center',
-          alignItems: 'center',
-          position: 'absolute',
-        }}>
-        <Image
-          source={
-            require('../img/sanout.png')
-          }
-          style={{
-            width: deviceWidth / 2,
-            height: deviceHeight / 2,
-          }}
-        />
-      </View>
-      {countdown % 2 == 0 && (
+    <QRCodeScanner
+      checkAndroid6Permissions={checkAndroidPermission}
+      onRead={onSuccess}
+      cameraType={'back'}
+      fadeIn={true}
+      reactivate={true}
+      showMarker={true}
+      topContent={
+
         <View
           style={{
-            marginTop: 70,
-            width: deviceWidth,
-            height: deviceHeight - 70,
-            opacity: 0.5,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-            position: 'absolute',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            padding: 10,
+            flex: 1,
           }}>
-          <Image
-            source={
-              require('../img/sanin.png')
-            }
-            style={{
-              width: deviceWidth / 2,
-              height: deviceHeight / 2,
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
             }}
-          />
+            style={styles.buttonTouchable1}>
+            <Icon name="angle-left" size={30} color={'black'} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={chooseFile}
+            style={styles.buttonTouchable2}>
+            <Text style={styles.buttonText}>
+              {Language.t('selectBase.SelectImg')}
+            </Text>
+          </TouchableOpacity>
         </View>
-      )}
-    </>
+      }
+      topViewStyle={{
+
+        alignItems: 'flex-start',
+        flexDirection: 'row',
+      }}
+
+    />
   );
 };
 

@@ -170,123 +170,238 @@ const Mains = ({ route }) => {
   }
 
   return (
-    <>
-      <StatusBar hidden={true} />
+    deviceWidth > 960 ? (
+      <>
 
-      <View style={tabbar}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text
-            style={{
 
-              fontSize: FontSize.medium,
-              fontWeight: 'bold',
-              color: Colors.fontColor,
-            }}> {`ระบบการจัดการคลังสินค้า`}</Text>
+        <View style={tabbar}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text
+              style={{
+
+                fontSize: FontSize.medium,
+                fontWeight: 'bold',
+                color: Colors.fontColor,
+              }}> {`ระบบการจัดการคลังสินค้า`}</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={{
+                width: 80,
+                paddingRight: 10,
+                alignItems: 'center'
+              }}
+              onPress={() => logOut()}>
+              <FontAwesomeIcon name="power-off" size={40} color={'red'} />
+            </TouchableOpacity>
+          </View>
+
         </View>
-        <View>
-          <TouchableOpacity
-            style={{
-              width: 80,
-              paddingRight: 10,
-              alignItems: 'center'
-            }}
-            onPress={() => logOut()}>
-            <FontAwesomeIcon name="power-off" size={40} color={'red'} />
-          </TouchableOpacity>
-        </View>
 
-      </View>
-
-      <View style={{
-        width: deviceWidth,
-        height: deviceHeight - deviceHeight * 0.1,
-        flexDirection: 'row',
-        paddingLeft: deviceHeight * 0.1,
-        paddingRight: deviceHeight * 0.1,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-
-
-        <TouchableOpacity style={{
-          backgroundColor: Colors.putAway,
-          flexDirection: 'column',
-          shadowColor: Colors.borderColor,
-          borderRadius: deviceWidth * 0.4,
-          width: deviceWidth * 0.4,
-          height: deviceHeight * 0.2,
+        <View style={{
+          width: deviceWidth,
+          height: deviceHeight - deviceHeight * 0.1,
+          flexDirection: 'row',
+          paddingLeft: deviceHeight * 0.1,
+          paddingRight: deviceHeight * 0.1,
+          justifyContent: 'space-between',
           alignItems: 'center',
-          justifyContent: 'center',
-          borderWidth: 1
-        }}
-          onPress={() => navigation.dispatch(
-            navigation.replace('Splashs', { data: 'MAJ' }))}
-        >
-          <Text style={{
-            color: Colors.fontColor2,
-            alignSelf: 'center',
-            fontSize: FontSize.large,
-            fontWeight: 'bold'
-          }}>Put-away</Text>
-        </TouchableOpacity>
+        }}>
 
 
-
-
-        <TouchableOpacity style={{
-          backgroundColor: Colors.picking,
-          flexDirection: 'column',
-          shadowColor: Colors.borderColor,
-          borderRadius: deviceWidth * 0.4,
-          width: deviceWidth * 0.4,
-          height: deviceHeight * 0.2,
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderWidth: 1,
-        }}
-          onPress={() => navigation.dispatch(
-            navigation.replace('Splashs', { data: 'MD' }))}
-        >
-          <Text style={{
-            color: Colors.fontColor2,
-            alignSelf: 'center',
-            fontSize: FontSize.large,
-            fontWeight: 'bold'
-          }}>Picking</Text>
-        </TouchableOpacity>
-
-      </View>
-
-
-
-      {loading && (
-        <View
-          style={{
-            width: deviceWidth,
-            height: deviceHeight,
-            opacity: 0.5,
-            backgroundColor: 'black',
-            alignSelf: 'center',
+          <TouchableOpacity style={{
+            backgroundColor: Colors.putAway,
+            flexDirection: 'column',
+            shadowColor: Colors.borderColor,
+            borderRadius: deviceWidth * 0.4,
+            width: deviceWidth * 0.4,
+            height: deviceHeight * 0.2,
+            alignItems: 'center',
             justifyContent: 'center',
-            alignContent: 'center',
-            position: 'absolute',
-          }}>
-          <ActivityIndicator
-            style={{
-              borderRadius: 15,
-              backgroundColor: null,
-              width: 100,
-              height: 100,
+            borderWidth: 1
+          }}
+            onPress={() => navigation.dispatch(
+              navigation.replace('Splashs', { data: 'MAJ' }))}
+          >
+            <Text style={{
+              color: Colors.fontColor2,
               alignSelf: 'center',
-            }}
-            animating={loading}
-            size="large"
-            color={Colors.darkPrimiryColor}
-          />
+              fontSize: FontSize.large,
+              fontWeight: 'bold'
+            }}>Put-away</Text>
+          </TouchableOpacity>
+
+
+
+
+          <TouchableOpacity style={{
+            backgroundColor: Colors.picking,
+            flexDirection: 'column',
+            shadowColor: Colors.borderColor,
+            borderRadius: deviceWidth * 0.4,
+            width: deviceWidth * 0.4,
+            height: deviceHeight * 0.2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: 1,
+          }}
+            onPress={() => navigation.dispatch(
+              navigation.replace('Splashs', { data: 'MD' }))}
+          >
+            <Text style={{
+              color: Colors.fontColor2,
+              alignSelf: 'center',
+              fontSize: FontSize.large,
+              fontWeight: 'bold'
+            }}>Picking</Text>
+          </TouchableOpacity>
+
         </View>
-      )
-      }
-    </>
+
+
+
+        {loading && (
+          <View
+            style={{
+              width: deviceWidth,
+              height: deviceHeight,
+              opacity: 0.5,
+              backgroundColor: 'black',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
+              position: 'absolute',
+            }}>
+            <ActivityIndicator
+              style={{
+                borderRadius: 15,
+                backgroundColor: null,
+                width: 100,
+                height: 100,
+                alignSelf: 'center',
+              }}
+              animating={loading}
+              size="large"
+              color={Colors.darkPrimiryColor}
+            />
+          </View>
+        )
+        }
+      </>
+    ) : (
+      <>
+
+
+        <View style={tabbar}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text
+              style={{
+
+                fontSize: FontSize.medium,
+                fontWeight: 'bold',
+                color: Colors.fontColor,
+              }}> {`ระบบการจัดการคลังสินค้า`}</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={{
+
+                paddingRight: 10,
+                alignItems: 'center'
+              }}
+              onPress={() => logOut()}>
+              <FontAwesomeIcon name="power-off" size={FontSize.medium * 2} color={'red'} />
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+        <View style={container2}>
+
+
+          <TouchableOpacity style={{
+            margin: 10,
+            backgroundColor: Colors.putAway,
+            flexDirection: 'column',
+            shadowColor: Colors.borderColor,
+            borderRadius: FontSize.large,
+            width: deviceWidth * 0.8,
+            height: FontSize.large * 4,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: 1
+          }}
+            onPress={() => navigation.dispatch(
+              navigation.replace('Splashs', { data: 'MAJ' }))}
+          >
+            <Text style={{
+              color: Colors.fontColor2,
+              alignSelf: 'center',
+              fontSize: FontSize.large,
+              fontWeight: 'bold'
+            }}>Put-away</Text>
+          </TouchableOpacity>
+
+
+
+
+          <TouchableOpacity style={{
+            margin: 10,
+            backgroundColor: Colors.picking,
+            flexDirection: 'column',
+            shadowColor: Colors.borderColor,
+            borderRadius: FontSize.large,
+            width: deviceWidth * 0.8,
+            height: FontSize.large * 4,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: 1,
+          }}
+            onPress={() => navigation.dispatch(
+              navigation.replace('Splashs', { data: 'MD' }))}
+          >
+            <Text style={{
+              color: Colors.fontColor2,
+              alignSelf: 'center',
+              fontSize: FontSize.large,
+              fontWeight: 'bold'
+            }}>Picking</Text>
+          </TouchableOpacity>
+
+        </View>
+
+
+
+        {loading && (
+          <View
+            style={{
+              width: deviceWidth,
+              height: deviceHeight,
+              opacity: 0.5,
+              backgroundColor: 'black',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
+              position: 'absolute',
+            }}>
+            <ActivityIndicator
+              style={{
+                borderRadius: 15,
+                backgroundColor: null,
+                width: 100,
+                height: 100,
+                alignSelf: 'center',
+              }}
+              animating={loading}
+              size="large"
+              color={Colors.darkPrimiryColor}
+            />
+          </View>
+        )
+        }
+      </>
+    )
+
   );
 };
 
@@ -305,14 +420,14 @@ const styles = StyleSheet.create({
   },
   container2: {
     width: deviceWidth,
-    height: '100%',
-    position: 'absolute',
+    height: deviceHeight - (FontSize.medium * 3),
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'white',
     flex: 1,
   },
   tabbar: {
     height: FontSize.medium * 3,
-    padding: 12,
     paddingLeft: 20,
     alignItems: 'center',
     backgroundColor: Colors.darkPrimiryColor,

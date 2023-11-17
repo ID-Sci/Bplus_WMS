@@ -326,30 +326,36 @@ const nextDelivery = ({ route }) => {
             }}>
                 <ScrollView  >
                     < View style={container1} >
-                        <View width={deviceWidth / 1.5} style={{
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                            backgroundColor: Colors.buttonTextColor
-                        }}>
+                        <View width={deviceWidth > 960 ? deviceWidth / 1.5 : deviceWidth}
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignContent: 'center',
+                                backgroundColor: Colors.buttonTextColor
+                            }}
+                            >
+
                             <View style={{
-                                paddingTop: 10,
+                                padding: 10,
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
-
+                                marginBottom: 5
                             }}>
-                                <View width={deviceWidth / 6} >
-                                    <View style={{ padding: 10, }}>
-                                        <Text style={styles.textTitle1}>
-                                            รหัสพาเล็ท :
-                                        </Text>
-                                    </View>
+                                <View
+                                    style={{
+                                        justifyContent: 'center',
+                                        paddingRight: 5,
+                                    }} >
+                                    <Text style={styles.textTitle1}>
+                                        รหัสพาเล็ท :
+                                    </Text>
+
                                 </ View>
-                                < View width={deviceWidth / 2}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.8}>
                                     <View style={{}}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <TextInput
-                                                width={deviceWidth / 2.5}
+                                                width={deviceWidth > 960 ? deviceWidth / 2.5 : deviceWidth * 0.6}
                                                 style={{
                                                     borderBottomColor: Colors.picking,
                                                     color: Colors.darkPrimiryColor,
@@ -365,7 +371,10 @@ const nextDelivery = ({ route }) => {
                                                 onChangeText={(val) => {
                                                     setWS_TAG(val)
                                                 }}></TextInput>
-                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanQR', { route: 'ND', key: 'WS_TAG', data: paramData, SKU_CODE: SKU_CODE, WS_TAG: WS_TAG })}>
+                                            <TouchableOpacity style={{
+                                                marginLeft: 10,
+                                                justifyContent: 'center'
+                                            }} onPress={() => navigation.navigate('ScanQR', { route: 'ND', key: 'WS_TAG', data: paramData, SKU_CODE: SKU_CODE, WS_TAG: WS_TAG, name: 'อ่านรายละเอียดงานจัดเก็บ' })}>
                                                 <FontAwesome
                                                     name="qrcode"
                                                     size={FontSize.medium * 2}
@@ -378,22 +387,21 @@ const nextDelivery = ({ route }) => {
                             </View>
 
 
-
-                        </View>
-                        <View style={{
-                            paddingTop: 10,
-                            paddingBottom: 10,
+                            <View style={{
+                            padding: 10,
                             justifyContent: 'space-between',
                             flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking,
                         }}>
-                            <View width={deviceWidth / 6}>
-                                <View style={{ padding: 10, }}>
-                                    <Text style={styles.textTitle2}>
-                                        ชื่อสินค้า :
-                                    </Text>
-                                </View>
+                            <View style={{
+                                justifyContent: 'center',
+                                paddingRight: 5,
+                            }} >
+                                <Text style={styles.textTitle2}>
+                                    ชื่อสินค้า :
+                                </Text>
+
                             </ View>
-                            < View width={deviceWidth / 2}>
+                            < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.7}>
                                 <View style={{ padding: 10, }}>
                                     <Text style={styles.textTitle2}>
                                         {paramData.SKU_NAME}
@@ -401,13 +409,17 @@ const nextDelivery = ({ route }) => {
                                 </View>
                             </View >
                         </View>
+                        </View>
+
+
+
                         <View>
                             <View style={{
 
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 3} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.5}  >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
                                             รหัสอ้างอิง
@@ -419,7 +431,7 @@ const nextDelivery = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.5} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1} >
                                             รหัสบาร์โค้ด
@@ -436,7 +448,7 @@ const nextDelivery = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 3} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.5}  >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
                                             จากรหัสตำแหน่งเก็บ
@@ -448,7 +460,7 @@ const nextDelivery = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.5} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
                                             จากตำแหน่งเก็บ
@@ -465,7 +477,7 @@ const nextDelivery = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 3} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.5}  >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
                                             ไปรหัสตำแหน่งเก็บ
@@ -477,7 +489,7 @@ const nextDelivery = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 3}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 3 : deviceWidth * 0.5} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
                                             ไปตำแหน่งเก็บ
@@ -495,7 +507,7 @@ const nextDelivery = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth / 6} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.25}  >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
                                         <Text style={styles.textTitle2}>
                                             กลุ่ม
@@ -507,7 +519,7 @@ const nextDelivery = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 6}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.25} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
                                         <Text style={styles.textTitle2}>
                                             แถว
@@ -520,7 +532,7 @@ const nextDelivery = ({ route }) => {
                                     </View>
                                 </View >
 
-                                <View width={deviceWidth / 6} >
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.25}  >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
                                         <Text style={styles.textTitle2}>
                                             ชั้น
@@ -532,7 +544,7 @@ const nextDelivery = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth / 6}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.25} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.picking }}>
                                         <Text style={styles.textTitle2}>
                                             ช่อง
@@ -561,8 +573,8 @@ const nextDelivery = ({ route }) => {
             }}>
                 <TouchableOpacity
                     style={{
-                        width: deviceWidth / 4,
-                        height: deviceWidth / 12,
+                        width: deviceWidth > 960 ? (deviceWidth / 4) : (deviceWidth * 0.4),
+                        height: deviceWidth > 960 ? (deviceWidth / 12) : (deviceWidth * 0.2),
                         justifyContent: 'center',
                         margin: 10,
                         borderRadius: 20,
@@ -595,8 +607,8 @@ const nextDelivery = ({ route }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{
-                        width: deviceWidth / 4,
-                        height: deviceWidth / 12,
+                        width: deviceWidth > 960 ? (deviceWidth / 4) : (deviceWidth * 0.4),
+                        height: deviceWidth > 960 ? (deviceWidth / 12) : (deviceWidth * 0.2),
                         justifyContent: 'center',
                         margin: 10,
                         borderRadius: 20,
@@ -666,7 +678,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
 
-        padding: 20
+        padding: deviceWidth > 960 ? 20 : 0
     },
     image: {
         flex: 1,

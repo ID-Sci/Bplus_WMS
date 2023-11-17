@@ -131,13 +131,14 @@ const SelectBase = ({ route }) => {
           setUpdateindex(i)
         }
       }
-    } else {
-      setBasename('')
-      setBsaeurl('')
-      setForkCode('')
-      setUsername('')
-      setPassword('')
     }
+    //  else {
+    //   setBasename('')
+    //   setBsaeurl('')
+    //   setForkCode('')
+    //   setUsername('')
+    //   setPassword('')
+    // }
   }
 
 
@@ -342,7 +343,7 @@ const SelectBase = ({ route }) => {
     console.log('>>-----------<<')
     console.log(state, urlnmae, registerReducer.machineNum)
     console.log('>>-----------<<')
-  
+
     await logOut(newurl, registerReducer.machineNum, username, password, '0828845662')
 
 
@@ -361,7 +362,7 @@ const SelectBase = ({ route }) => {
       .then((response) => response.json())
       .then(async (json) => {
         if (json.ResponseCode == 200 && json.ReasonString == 'Completed') {
-         
+
           await fetch(newurl + '/DevUsers', {
             method: 'POST',
             body: JSON.stringify({
@@ -522,9 +523,9 @@ const SelectBase = ({ route }) => {
           </Picker>
         </View>
       </View>
-      <ScrollView>
-        <View style={container1}>
 
+      <View style={container1}>
+        <ScrollView>
           <SafeAreaView >
             <KeyboardAvoidingView keyboardVerticalOffset={1} >
               <View style={{
@@ -848,8 +849,8 @@ const SelectBase = ({ route }) => {
                       borderRadius: 30,
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      height: 80,
-                      width: deviceWidth > 960 ? deviceWidth * 0.3 : deviceWidth * 0.35,
+                      height: deviceWidth > 960 ? 80 : 50,
+                      width: deviceWidth > 960 ? deviceWidth * 0.35 : deviceWidth * 0.4,
                       backgroundColor: Colors.darkPrimiryColor,
                     }}>
                     <Text
@@ -873,7 +874,7 @@ const SelectBase = ({ route }) => {
                         padding: 10,
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        height: 80,
+                        height: deviceWidth > 960 ? 80 : 50,
                         width: deviceWidth > 960 ? deviceWidth * 0.3 : deviceWidth * 0.35,
                         backgroundColor: Colors.buttonColorPrimary,
                       }}>
@@ -897,7 +898,7 @@ const SelectBase = ({ route }) => {
                         borderRadius: 30,
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        height: 80,
+                        height: deviceWidth > 960 ? 80 : 50,
                         width: deviceWidth > 960 ? deviceWidth * 0.3 : deviceWidth * 0.35,
                         backgroundColor: Colors.buttonTextColor,
                       }}>
@@ -917,9 +918,10 @@ const SelectBase = ({ route }) => {
               </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
+      </View>
 
-      </ScrollView>
+
       {loading && (
         <View
           style={{
@@ -953,7 +955,8 @@ const SelectBase = ({ route }) => {
 const styles = StyleSheet.create({
   container1: {
     paddingTop: 20,
-
+    paddingBottom: 20,
+    height: deviceHeight - (FontSize.medium * 3),
     flex: 1,
     flexDirection: 'column',
     backgroundColor: Colors.backgroundColor
@@ -962,7 +965,7 @@ const styles = StyleSheet.create({
     width: deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.8
   },
   body1e: {
-    padding: 20,
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },

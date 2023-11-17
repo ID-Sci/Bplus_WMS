@@ -253,24 +253,27 @@ const Mains = ({ route }) => {
                 }
             })
     }
+    console.log(JSON.stringify(dataReducer.PutAway[0]))
     return (
         <>
             <StatusBar hidden={true} />
             <View style={tabbar}>
-                <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity
+                <View style={{
+                    alignItems: 'center',
+                    flexDirection: 'row'
+                }}>
+                    <TouchableOpacity
                         style={{
-                            width: 80,
-                            paddingRight: 10,
+                            paddingLeft: FontSize.large,
                             alignItems: 'center'
                         }}
                         onPress={() => navigation.dispatch(
                             navigation.replace('Main'))}>
-                        <FontAwesomeIcon name="angle-left" size={40} color={Colors.fontColor2} />
+                        <FontAwesomeIcon name="angle-left" size={FontSize.large * 2} color={Colors.fontColor2} />
                     </TouchableOpacity>
                     <Text
                         style={{
-
+                            paddingLeft: 10,
                             fontSize: FontSize.medium,
                             fontWeight: 'bold',
                             color: Colors.fontColor,
@@ -279,146 +282,261 @@ const Mains = ({ route }) => {
                 <View>
                     <TouchableOpacity
                         style={{
-                            width: 80,
-                            paddingRight: 10,
+
+                            paddingRight: FontSize.large,
                             alignItems: 'center'
                         }}
-                        onPress={() =>  navigation.dispatch(
+                        onPress={() => navigation.dispatch(
                             navigation.replace('Splashs', { data: 'MAJ' }))}>
-                        <FontAwesomeIcon name="refresh" size={40} color={Colors.fontColor2} />
+                        <FontAwesomeIcon name="refresh" size={FontSize.large} color={Colors.fontColor2} />
                     </TouchableOpacity>
                 </View>
 
             </View>
 
+            {
+                deviceWidth > 960 ? (
+                    <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
+                        <View width={deviceWidth * 0.8} height={deviceHeight - deviceHeight * 0.2} margin={20} padding={10} backgroundColor={Colors.putAway}   >
+                            <View style={{
+                                backgroundColor: Colors.putAway,
+                                flexDirection: 'column',
 
-            <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
-                <View width={deviceWidth * 0.8} height={deviceHeight - deviceHeight * 0.2} margin={20} padding={10} backgroundColor={Colors.putAway}   >
-                    <View style={{
-                        backgroundColor: Colors.putAway,
-                        flexDirection: 'column',
+                                height: FontSize.large * 2,
+                                borderTopStartRadius: deviceHeight * 0.1,
+                                borderTopEndRadius: deviceHeight * 0.1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
 
-                        height: FontSize.large * 2,
-                        borderTopStartRadius: deviceHeight * 0.1,
-                        borderTopEndRadius: deviceHeight * 0.1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                            }}>
+                                <Text style={{
+                                    color: Colors.fontColor2,
+                                    alignSelf: 'center',
+                                    fontSize: FontSize.large,
+                                    fontWeight: 'bold'
+                                }}>Put-away</Text>
+                            </View>
+                            <ScrollView horizontal={true}>
+                                <ScrollView>
+                                    <View width={deviceWidth * 0.8}>
+                                        {dataReducer.PutAway.length > 0 ? dataReducer.PutAway.sort((a, b) => {
+                                            return a.WS_KEY - b.WS_KEY;
+                                        }).map((PutAwayItem, index) => {
+                                            return (index == 0 ?
+                                                <TouchableOpacity
+                                                    onPress={() => _STARTSTORAGE()
+                                                    }
+                                                    style={{
+                                                        backgroundColor: Colors.putAwayItem,
+                                                        height: FontSize.large * 2,
+                                                        borderColor: Colors.fontColor2,
 
-                    }}>
-                        <Text style={{
-                            color: Colors.fontColor2,
-                            alignSelf: 'center',
-                            fontSize: FontSize.large,
-                            fontWeight: 'bold'
-                        }}>Put-away</Text>
+                                                        borderWidth: 1,
+                                                        justifyContent: 'space-between',
+                                                        flexDirection: 'row',
+                                                    }}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <View style={{ marginLeft: 20 }}>
+                                                            <Text style={{
+                                                                color: 'black',
+                                                                alignSelf: 'center',
+                                                                fontSize: FontSize.large,
+                                                                fontWeight: 'bold'
+                                                            }}>JOB {PutAwayItem.WS_KEY}, {PutAwayItem.SKU_BARCODE ? PutAwayItem.SKU_BARCODE : 'ไม่มีข้อมูล'}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                                        <View style={{ marginRight: 20 }}>
+                                                            <Text style={{
+                                                                color: 'black',
+                                                                alignSelf: 'center',
+                                                                fontSize: FontSize.large,
+                                                                fontWeight: 'bold'
+                                                            }}>{` { ${PutAwayItem.TOWL_CODE} }`}</Text>
+                                                        </View>
+                                                    </View>
+                                                </TouchableOpacity> :
+                                                <View
+
+                                                    style={{
+                                                        backgroundColor: Colors.borderColor,
+                                                        height: FontSize.large * 2,
+                                                        borderColor: Colors.fontColor2,
+
+                                                        borderWidth: 1,
+                                                        justifyContent: 'space-between',
+                                                        flexDirection: 'row',
+                                                    }}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <View style={{ marginLeft: 20 }}>
+                                                            <Text style={{
+                                                                color: Colors.inputText,
+                                                                alignSelf: 'center',
+                                                                fontSize: FontSize.large,
+                                                                fontWeight: 'bold'
+                                                            }}>JOB {PutAwayItem.WS_KEY}, {PutAwayItem.SKU_BARCODE ? PutAwayItem.SKU_BARCODE : 'ไม่มีข้อมูล'}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                                        <View style={{ marginRight: 20 }}>
+                                                            <Text style={{
+                                                                color: Colors.inputText,
+                                                                alignSelf: 'center',
+                                                                fontSize: FontSize.large,
+                                                                fontWeight: 'bold'
+                                                            }}> {`{ ${PutAwayItem.TOWL_CODE} }`}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+
+                                            )
+                                        }) : (
+                                            <View
+
+                                                style={{
+
+                                                    height: 70,
+                                                    borderBottomColor: Colors.fontColor2,
+                                                    borderBottomWidth: 1,
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'column',
+                                                }}>
+                                                <Text style={{
+                                                    color: Colors.backgroundColor,
+                                                    alignSelf: 'center',
+                                                    fontSize: FontSize.large,
+                                                    fontWeight: 'bold'
+                                                }}>ไม่มีข้อมูล</Text>
+                                            </View>
+
+                                        )}
+                                    </View>
+
+                                </ScrollView>
+
+                            </ScrollView>
+
+                        </View>
+
                     </View>
-                    <ScrollView horizontal={true}>
-                        <ScrollView>
-                            <View width={deviceWidth * 0.8}>
-                                {dataReducer.PutAway.length > 0 ? dataReducer.PutAway.sort((a, b) => {
-                                    return a.WS_KEY - b.WS_KEY;
-                                }).map((PutAwayItem, index) => {
-                                    return (index == 0 ?
-                                        <TouchableOpacity
-                                            onPress={() => _STARTSTORAGE()
-                                            }
-                                            style={{
-                                                backgroundColor: Colors.putAwayItem,
-                                                height: FontSize.large * 2,
-                                                borderColor: Colors.fontColor2,
+                ) : (
+                    <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
+                        <ScrollView horizontal={true}>
+                            <ScrollView>
+                                <View width={deviceWidth}>
+                                    {dataReducer.PutAway.length > 0 ? dataReducer.PutAway.sort((a, b) => {
+                                        return a.WS_KEY - b.WS_KEY;
+                                    }).map((PutAwayItem, index) => {
+                                        return (index == 0 ?
+                                            <TouchableOpacity
+                                                onPress={() => _STARTSTORAGE()
+                                                }
+                                                style={{
+                                                    backgroundColor: Colors.putAwayItem,
+                                                    height: FontSize.large * 4,
+                                                    borderColor: Colors.fontColor2,
 
-                                                borderWidth: 1,
-                                                justifyContent: 'space-between',
-                                                flexDirection: 'row',
-                                            }}>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                <View style={{ marginLeft: 20 }}>
+                                                    borderWidth: 1,
+                                                    justifyContent: 'space-between',
+                                                    flexDirection: 'row',
+                                                }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <View style={{ marginLeft: 20 }}>
+                                                        <Text style={{
+                                                            color: 'black',
+                                                            alignSelf: 'flex-start',
+                                                            fontSize: FontSize.large,
+                                                            fontWeight: 'bold'
+                                                        }}> JOB {PutAwayItem.WS_KEY}</Text>
+                                                        <Text style={{
+                                                            color: 'black',
+                                                            alignSelf: 'flex-start',
+                                                            fontSize: FontSize.medium,
+                                                            fontWeight: 'bold'
+                                                        }}>{PutAwayItem.SKU_BARCODE ? PutAwayItem.SKU_BARCODE : 'ไม่มีข้อมูล'}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                                    <View style={{ marginRight: 20 }}>
+                                                        <Text style={{
+                                                            color: 'black',
+                                                            alignSelf: 'center',
+                                                            fontSize: FontSize.large,
+                                                            fontWeight: 'bold'
+                                                        }}>{` { ${PutAwayItem.TOWL_CODE} }`}</Text>
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity> :
+                                            <View
+
+                                                style={{
+                                                    backgroundColor: Colors.borderColor,
+                                                    height: FontSize.large * 4,
+                                                    borderColor: Colors.fontColor2,
+
+                                                    borderWidth: 1,
+                                                    justifyContent: 'space-between',
+                                                    flexDirection: 'row',
+                                                }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <View style={{ marginLeft: 20 }}>
                                                     <Text style={{
-                                                        color: 'black',
-                                                        alignSelf: 'center',
-                                                        fontSize: FontSize.large,
-                                                        fontWeight: 'bold'
-                                                    }}>JOB {PutAwayItem.WS_KEY}, {PutAwayItem.SKU_BARCODE ? PutAwayItem.SKU_BARCODE : 'ไม่มีข้อมูล'}</Text>
+                                                            color: Colors.inputText,
+                                                            alignSelf: 'flex-start',
+                                                            fontSize: FontSize.large,
+                                                            fontWeight: 'bold'
+                                                        }}> JOB {PutAwayItem.WS_KEY}</Text>
+                                                        <Text style={{
+                                                            color: Colors.inputText,
+                                                            alignSelf: 'flex-start',
+                                                            fontSize: FontSize.medium,
+                                                            fontWeight: 'bold'
+                                                        }}>{PutAwayItem.SKU_BARCODE ? PutAwayItem.SKU_BARCODE : 'ไม่มีข้อมูล'}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                                    <View style={{ marginRight: 20 }}>
+                                                        <Text style={{
+                                                            color: Colors.inputText,
+                                                            alignSelf: 'center',
+                                                            fontSize: FontSize.large,
+                                                            fontWeight: 'bold'
+                                                        }}> {`{ ${PutAwayItem.TOWL_CODE} }`}</Text>
+                                                    </View>
                                                 </View>
                                             </View>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                                <View style={{ marginRight: 20 }}>
-                                                    <Text style={{
-                                                        color: 'black',
-                                                        alignSelf: 'center',
-                                                        fontSize: FontSize.large,
-                                                        fontWeight: 'bold'
-                                                    }}>{` { ${PutAwayItem.TOWL_CODE} }`}</Text>
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity> :
+                                        )
+                                    }) : (
                                         <View
 
                                             style={{
-                                                backgroundColor: Colors.borderColor,
-                                                height: FontSize.large * 2,
-                                                borderColor: Colors.fontColor2,
 
-                                                borderWidth: 1,
-                                                justifyContent: 'space-between',
-                                                flexDirection: 'row',
+                                                height: 70,
+                                                borderBottomColor: Colors.fontColor2,
+                                                borderBottomWidth: 1,
+                                                justifyContent: 'center',
+                                                flexDirection: 'column',
                                             }}>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                <View style={{ marginLeft: 20 }}>
-                                                    <Text style={{
-                                                        color: Colors.inputText,
-                                                        alignSelf: 'center',
-                                                        fontSize: FontSize.large,
-                                                        fontWeight: 'bold'
-                                                    }}>JOB {PutAwayItem.WS_KEY}, {PutAwayItem.SKU_BARCODE ? PutAwayItem.SKU_BARCODE : 'ไม่มีข้อมูล'}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                                                <View style={{ marginRight: 20 }}>
-                                                    <Text style={{
-                                                        color: Colors.inputText,
-                                                        alignSelf: 'center',
-                                                        fontSize: FontSize.large,
-                                                        fontWeight: 'bold'
-                                                    }}> {`{ ${PutAwayItem.TOWL_CODE} }`}</Text>
-                                                </View>
-                                            </View>
+                                            <Text style={{
+                                                color: Colors.backgroundColor,
+                                                alignSelf: 'center',
+                                                fontSize: FontSize.large,
+                                                fontWeight: 'bold'
+                                            }}>ไม่มีข้อมูล</Text>
                                         </View>
 
-                                    )
-                                }) : (
-                                    <View
-
-                                        style={{
-
-                                            height: 70,
-                                            borderBottomColor: Colors.fontColor2,
-                                            borderBottomWidth: 1,
-                                            justifyContent: 'center',
-                                            flexDirection: 'column',
-                                        }}>
-                                        <Text style={{
-                                            color: Colors.backgroundColor,
-                                            alignSelf: 'center',
-                                            fontSize: FontSize.large,
-                                            fontWeight: 'bold'
-                                        }}>ไม่มีข้อมูล</Text>
-                                    </View>
-
-                                )}
-                            </View>
-
+                                    )}
+                                </View>
+                            </ScrollView>
                         </ScrollView>
-
-                    </ScrollView>
-
-                </View>
-
-            </View>
-
-
+                    </View>
+                )
+            }
             {loading && (
                 <View
                     style={{
@@ -472,8 +590,6 @@ const styles = StyleSheet.create({
     },
     tabbar: {
         height: FontSize.medium * 3,
-        padding: 12,
-        paddingLeft: 20,
         alignItems: 'center',
         backgroundColor: Colors.darkPrimiryColor,
         justifyContent: 'space-between',

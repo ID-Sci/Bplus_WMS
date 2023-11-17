@@ -137,9 +137,22 @@ const ScanScreen = ({ route }) => {
   };
 
   return (
-    <>
+    <QRCodeScanner
+    checkAndroid6Permissions={checkAndroidPermission}
+    onRead={onSuccess}
+    cameraType={'back'}
+    fadeIn={true}
+    reactivate={true}
+    showMarker={true}
+    topContent={
+
       <View
-        style={styles.tabbar}>
+        style={{
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          padding: 10,
+          flex: 1,
+        }}>
 
         <TouchableOpacity
           onPress={() => {
@@ -147,9 +160,6 @@ const ScanScreen = ({ route }) => {
           }}
           style={styles.buttonTouchable1}>
           <Icon name="angle-left" size={30} color={'black'} />
-          <Text style={styles.buttonText}>
-            {'ย้อนกลับ'}
-          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={chooseFile}
@@ -159,72 +169,14 @@ const ScanScreen = ({ route }) => {
           </Text>
         </TouchableOpacity>
       </View>
+    }
+    topViewStyle={{
 
-      <View>
-        <QRCodeScanner
-          checkAndroid6Permissions={checkAndroidPermission}
-          onRead={onSuccess}
-          cameraType={'back'}
-          fadeIn={true}
-          reactivate={true}
-        />
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+    }}
 
-      </View>
-      <View
-        style={{
-          marginTop: 70,
-          width: deviceWidth,
-          height: deviceHeight - 70,
-          opacity: 0.5,
-
-          alignSelf: 'center',
-          justifyContent: 'center',
-          alignContent: 'center',
-          alignItems: 'center',
-          position: 'absolute',
-        }}>
-        <Image
-          source={
-            require('../img/sanout.png')
-          }
-          style={{
-            width: deviceWidth / 2,
-            height: deviceHeight / 2,
-          }}
-        />
-
-
-      </View>
-      {countdown % 2 == 0 && (
-        <View
-          style={{
-            marginTop: 70,
-            width: deviceWidth,
-            height: deviceHeight - 70,
-
-            opacity: 0.5,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-            position: 'absolute',
-          }}>
-          <Image
-            source={
-              require('../img/sanin.png')
-            }
-            style={{
-              width: deviceWidth / 2,
-              height: deviceHeight / 2,
-            }}
-          />
-
-
-        </View>
-      )}
-
-
-    </>
+  />
   );
 };
 

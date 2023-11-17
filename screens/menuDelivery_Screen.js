@@ -261,20 +261,22 @@ const menuDelivery_Screen = ({ route }) => {
     <>
       <StatusBar hidden={true} />
       <View style={tabbar}>
-        <View style={{ flexDirection: 'row' }}>
-        <TouchableOpacity
+        <View style={{
+          alignItems: 'center',
+          flexDirection: 'row'
+        }}>
+          <TouchableOpacity
             style={{
-              width: 80,
-              paddingRight: 10,
+              paddingLeft: FontSize.large,
               alignItems: 'center'
             }}
             onPress={() => navigation.dispatch(
               navigation.replace('Main'))}>
-            <FontAwesomeIcon name="angle-left" size={40} color={Colors.fontColor2} />
+            <FontAwesomeIcon name="angle-left" size={FontSize.large * 2} color={Colors.fontColor2} />
           </TouchableOpacity>
           <Text
             style={{
-
+              paddingLeft: 10,
               fontSize: FontSize.medium,
               fontWeight: 'bold',
               color: Colors.fontColor,
@@ -283,19 +285,18 @@ const menuDelivery_Screen = ({ route }) => {
         <View>
           <TouchableOpacity
             style={{
-              width: 80,
-              paddingRight: 10,
+
+              paddingRight: FontSize.large,
               alignItems: 'center'
             }}
-            onPress={() =>  navigation.dispatch(
+            onPress={() => navigation.dispatch(
               navigation.replace('Splashs', { data: 'MD' }))}>
-            <FontAwesomeIcon name="refresh" size={40} color={Colors.fontColor2} />
+            <FontAwesomeIcon name="refresh" size={FontSize.large} color={Colors.fontColor2} />
           </TouchableOpacity>
         </View>
 
       </View>
-
-      < >
+      {deviceWidth > 960 ? (< >
         <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
           <View width={deviceWidth * 0.8} height={deviceHeight - deviceHeight * 0.2} style={{ flexDirection: 'column', alignSelf: 'center' }} margin={20} padding={10} backgroundColor={Colors.picking}   >
             <View style={{
@@ -424,34 +425,160 @@ const menuDelivery_Screen = ({ route }) => {
             </ScrollView>
           </View>
         </View>
-      </ >
+      </ >) : (< >
+        <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
+          <ScrollView horizontal={true}>
+            <ScrollView>
+              <View width={deviceWidth}>
+                {dataReducer.Picking.length > 0 ? dataReducer.Picking.sort((a, b) => {
+                  return a.WS_KEY - b.WS_KEY;
+                }).map((PickingItem, index) => {
+                  return (
+                    index == 0 ?
+                      <TouchableOpacity
 
-      {loading && (
-        <View
-          style={{
-            width: deviceWidth,
-            height: deviceHeight,
-            opacity: 0.5,
-            backgroundColor: 'black',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignContent: 'center',
-            position: 'absolute',
-          }}>
-          <ActivityIndicator
-            style={{
-              borderRadius: 15,
-              backgroundColor: null,
-              width: 100,
-              height: 100,
-              alignSelf: 'center',
-            }}
-            animating={loading}
-            size="large"
-            color={Colors.darkPrimiryColor}
-          />
+                        onPress={() => _STARTPICKING()
+
+                        }
+
+                        style={{
+                          backgroundColor: Colors.putAwayItem,
+                          height: FontSize.large * 4,
+                          borderColor: Colors.fontColor2,
+
+                          borderWidth: 1,
+                          justifyContent: 'space-between',
+                          flexDirection: 'row',
+                        }}>
+
+                        <View
+
+                          style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <View style={{ marginLeft: 20 }}>
+                            <Text style={{
+                              color: 'black',
+                              alignSelf: 'flex-start',
+                              fontSize: FontSize.large,
+                              fontWeight: 'bold'
+                            }}>JOB {PickingItem.WS_KEY}</Text>
+                            <Text style={{
+                              color: 'black',
+                              alignSelf: 'flex-start',
+                              fontSize: FontSize.large,
+                              fontWeight: 'bold'
+                            }}>{PickingItem.SKU_BARCODE ? PickingItem.SKU_BARCODE : 'ไม่มีข้อมูล'} </Text>
+                          </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                          <View style={{ marginRight: 20 }}>
+                            <Text style={{
+                              color: 'black',
+                              alignSelf: 'center',
+                              fontSize: FontSize.large,
+                              fontWeight: 'bold'
+                            }}>{` { ${PickingItem.FROM_WL_CODE ? PickingItem.FROM_WL_CODE : 'ไม่มีข้อมูล'} }`}</Text>
+                          </View>
+                        </View>
+
+                      </TouchableOpacity> :
+                      <View
+                        style={{
+                          backgroundColor: Colors.borderColor,
+                          height: FontSize.large * 4,
+                          borderColor: Colors.fontColor2,
+
+                          borderWidth: 1,
+                          justifyContent: 'space-between',
+                          flexDirection: 'row',
+                        }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <View style={{ marginLeft: 20 }}>
+                            <Text style={{
+                              color: Colors.inputText,
+                              alignSelf: 'flex-start',
+                              fontSize: FontSize.large,
+                              fontWeight: 'bold'
+                            }}>JOB {PickingItem.WS_KEY}</Text>
+                             <Text style={{
+                              color: Colors.inputText,
+                              alignSelf: 'flex-start',
+                              fontSize: FontSize.large,
+                              fontWeight: 'bold'
+                            }}>{PickingItem.SKU_BARCODE ? PickingItem.SKU_BARCODE : 'ไม่มีข้อมูล'}</Text>
+                          </View>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                          <View style={{ marginRight: 20 }}>
+                            <Text style={{
+                              color: Colors.inputText,
+                              alignSelf: 'center',
+                              fontSize: FontSize.large,
+                              fontWeight: 'bold'
+                            }}>{`{ ${PickingItem.FROM_WL_CODE ? PickingItem.FROM_WL_CODE : 'ไม่มีข้อมูล'} }`}</Text>
+                          </View>
+                        </View>
+                      </View>
+                  )
+
+                }) : (
+                  <View
+
+                    style={{
+                      height: 70,
+
+                      borderBottomColor: Colors.fontColor2,
+                      borderBottomWidth: 1,
+                      justifyContent: 'center',
+                      flexDirection: 'column',
+                    }}>
+                    <Text style={{
+                      color: Colors.backgroundColor,
+                      alignSelf: 'center',
+                      fontSize: FontSize.large,
+                      fontWeight: 'bold'
+                    }}>ไม่มีข้อมูล</Text>
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+          </ScrollView>
         </View>
-      )
+
+      </ >)
+      }
+
+
+
+      {
+        loading && (
+          <View
+            style={{
+              width: deviceWidth,
+              height: deviceHeight,
+              opacity: 0.5,
+              backgroundColor: 'black',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
+              position: 'absolute',
+            }}>
+            <ActivityIndicator
+              style={{
+                borderRadius: 15,
+                backgroundColor: null,
+                width: 100,
+                height: 100,
+                alignSelf: 'center',
+              }}
+              animating={loading}
+              size="large"
+              color={Colors.darkPrimiryColor}
+            />
+          </View>
+        )
       }
     </>
   );
@@ -478,8 +605,6 @@ const styles = StyleSheet.create({
   },
   tabbar: {
     height: FontSize.medium * 3,
-    padding: 12,
-    paddingLeft: 20,
     alignItems: 'center',
     backgroundColor: Colors.darkPrimiryColor,
     justifyContent: 'space-between',

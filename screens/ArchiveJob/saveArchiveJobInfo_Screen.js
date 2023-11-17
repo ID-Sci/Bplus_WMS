@@ -273,11 +273,11 @@ const SaveArchiveJobInfo = ({ route }) => {
                         Language.t('notiAlert.header'),
                         'จัดเก็บสำเร็จ', [{
                             text: Language.t('alert.ok'), onPress: () =>
-                            navigation.dispatch(
-                                navigation.replace('Main', {})
-                              )
-                                // navigation.dispatch(
-                                //     navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดส่ง', data: 'MAJ' }))
+                                navigation.dispatch(
+                                    navigation.replace('Main', {})
+                                )
+                            // navigation.dispatch(
+                            //     navigation.replace('Splashs', { name: 'อ่านรายละเอียดงานจัดส่ง', data: 'MAJ' }))
                         }
                     ]);
 
@@ -330,20 +330,24 @@ const SaveArchiveJobInfo = ({ route }) => {
             }}>
                 <ScrollView  >
                     < View style={container1} >
-                        <View width={deviceWidth > 960 ? deviceWidth *0.5 : deviceWidth * 0.8} 
-                        style={{
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                            backgroundColor: Colors.buttonTextColor
-                        }}>
+                        <View width={deviceWidth > 960 ? deviceWidth * 0.5 : deviceWidth}
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignContent: 'center',
+                                backgroundColor: Colors.buttonTextColor
+                            }}>
                             <View style={{
-                                paddingTop: 10,
+                                padding: 10,
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                                 marginBottom: 5
                             }}>
-                                <View width={deviceWidth > 960 ? deviceWidth* 0.15 : deviceWidth * 0.2} >
+                                <View
+                                    style={{
+                                        justifyContent: 'center',
+                                        paddingRight: 5,
+                                    }} >
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle1}>
                                             ตำแหน่งเก็บ :
@@ -351,11 +355,11 @@ const SaveArchiveJobInfo = ({ route }) => {
                                     </View>
                                 </ View>
 
-                                < View width={deviceWidth > 960 ? deviceWidth *0.45: deviceWidth * 0.7}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.8}>
                                     <View style={{}}>
-                                        <View style={{ flexDirection: 'row' }}>
+                                        <View style={{ flexDirection: 'row', }}>
                                             <TextInput
-                                                width={deviceWidth > 960 ? deviceWidth *0.3 : deviceWidth * 0.5}
+                                                width={deviceWidth > 960 ? deviceWidth * 0.3 : deviceWidth * 0.5}
                                                 style={{
                                                     borderBottomColor: Colors.putAwayItem,
                                                     color: Colors.darkPrimiryColor,
@@ -371,7 +375,11 @@ const SaveArchiveJobInfo = ({ route }) => {
                                                 onChangeText={(val) => {
                                                     set_WL_CODE(val)
                                                 }}></TextInput>
-                                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('ScanQR', { route: 'SAJ_Info', key: 'WL_CODE', data: paramData, SKU_CODE: SKU_CODE })}>
+                                            <TouchableOpacity style={{
+                                                marginLeft: 10,
+                                                justifyContent: 'center'
+                                            }}
+                                                onPress={() => navigation.navigate('ScanQR', { route: 'SAJ_Info', key: 'WL_CODE', data: paramData, SKU_CODE: SKU_CODE ,name:route.params.name})}>
                                                 <FontAwesome
                                                     name="qrcode"
                                                     size={FontSize.medium * 2}
@@ -432,7 +440,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth > 960 ? deviceWidth *0.25 : deviceWidth * 0.4} >
+                                <View width={deviceWidth > 960 ? deviceWidth * 0.25 : deviceWidth * 0.5} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             ไปรหัสตำแหน่งเก็บ
@@ -444,7 +452,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth > 960 ? deviceWidth *0.25: deviceWidth * 0.4}>
+                                < View width={deviceWidth > 960 ? deviceWidth * 0.25 : deviceWidth * 0.5}>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             ไปตำแหน่งเก็บ
@@ -461,7 +469,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth > 960 ? deviceWidth *0.125 : deviceWidth * 0.2} >
+                                <View width={deviceWidth > 960 ? deviceWidth * 0.125 : deviceWidth * 0.25} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             กลุ่ม
@@ -473,7 +481,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth > 960 ? deviceWidth *0.125 : deviceWidth * 0.2}>
+                                < View width={deviceWidth > 960 ? deviceWidth * 0.125 : deviceWidth * 0.25}>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             แถว
@@ -486,7 +494,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                     </View>
                                 </View >
 
-                                <View width={deviceWidth > 960 ? deviceWidth *0.125 : deviceWidth * 0.2} >
+                                <View width={deviceWidth > 960 ? deviceWidth * 0.125 : deviceWidth * 0.25} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             ชั้น
@@ -498,7 +506,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth > 960 ? deviceWidth *0.125 : deviceWidth * 0.2}>
+                                < View width={deviceWidth > 960 ? deviceWidth * 0.125 : deviceWidth * 0.25}>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAway }}>
                                         <Text style={styles.textTitle2}>
                                             ช่อง
@@ -516,14 +524,14 @@ const SaveArchiveJobInfo = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAwayItem,
                             }}>
-                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2}>
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.3}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             รหัสสินค้า :
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.8}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.7}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             {paramData.SKU_CODE}
@@ -536,14 +544,14 @@ const SaveArchiveJobInfo = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row', borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.putAwayItem,
                             }}>
-                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.2}>
+                                <View width={deviceWidth > 960 ? deviceWidth / 6 : deviceWidth * 0.3}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             ชื่อสินค้า :
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.8}>
+                                < View width={deviceWidth > 960 ? deviceWidth / 2 : deviceWidth * 0.7}>
                                     <View style={{ padding: 10, }}>
                                         <Text style={styles.textTitle2}>
                                             {paramData.SKU_NAME}
@@ -557,7 +565,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <View width={deviceWidth > 960 ? deviceWidth * 0.25 : deviceWidth * 0.4} >
+                                <View width={deviceWidth > 960 ? deviceWidth * 0.25 : deviceWidth * 0.5} >
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1}>
                                             รหัสอ้างอิง
@@ -569,7 +577,7 @@ const SaveArchiveJobInfo = ({ route }) => {
                                         </Text>
                                     </View>
                                 </ View>
-                                < View width={deviceWidth > 960 ? deviceWidth *0.25: deviceWidth * 0.4}>
+                                < View width={deviceWidth > 960 ? deviceWidth * 0.25 : deviceWidth * 0.5}>
                                     <View style={{ padding: 10, borderColor: Colors.textColorSecondary, borderWidth: 1, backgroundColor: Colors.textColorSecondary }}>
                                         <Text style={styles.textTitle1} >
                                             รหัสบาร์โค้ด
@@ -684,8 +692,8 @@ const SaveArchiveJobInfo = ({ route }) => {
                     onPress={() => setModalVisible(!modalVisible)}>
                     <View
                         style={{
-                            width: deviceWidth / 4,
-                            height: deviceWidth / 12,
+                            width: deviceWidth > 960 ? (deviceWidth / 4) : (deviceWidth * 0.4),
+                            height: deviceWidth > 960 ? (deviceWidth / 12) : (deviceWidth * 0.2),
                             justifyContent: 'center',
                             margin: 10,
                             borderRadius: 20,
@@ -707,8 +715,8 @@ const SaveArchiveJobInfo = ({ route }) => {
 
                 <TouchableOpacity
                     style={{
-                        width: deviceWidth / 4,
-                        height: deviceWidth / 12,
+                        width: deviceWidth > 960 ? (deviceWidth / 4) : (deviceWidth * 0.4),
+                        height: deviceWidth > 960 ? (deviceWidth / 12) : (deviceWidth * 0.2),
                         justifyContent: 'center',
                         margin: 10,
                         borderRadius: 20,
@@ -785,7 +793,7 @@ const SaveArchiveJobInfo = ({ route }) => {
 
 const styles = StyleSheet.create({
     container1: {
-        paddingTop: 20,
+        paddingTop: deviceWidth > 960 ? 20 : 0,
         alignItems: 'center',
         flex: 1,
         flexDirection: 'column',

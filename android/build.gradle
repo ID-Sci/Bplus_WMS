@@ -6,7 +6,7 @@ buildscript {
         minSdkVersion = 21
         compileSdkVersion = 30
         targetSdkVersion = 30
-      supportLibVersion   = "30.0.2"
+        supportLibVersion   = "30.0.2"
         playServicesVersion = "17.0.0" // or find latest version
         androidMapsUtilsVersion = "1.2.1"
     }

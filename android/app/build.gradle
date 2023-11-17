@@ -158,8 +158,6 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-    
- 
          release {
             if (project.hasProperty('RELEASE_STORE_FILE')) {
                 storeFile file(RELEASE_STORE_FILE)

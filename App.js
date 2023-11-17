@@ -42,6 +42,7 @@ import SaveDeliveryInfo from './screens/Delivery/saveDeliveryInfo_Screen';
 import SelectBase from './pages/SelectBase';
 import ScanScreen from './pages/ScanScreen';
 
+
 const LoginStack = createStackNavigator();
 const MainStack = createStackNavigator();
 const App = () => {
@@ -55,43 +56,48 @@ const App = () => {
       changeLanguage(userReducer.userData[userIndex].language);
     }
   }, []);
+
   const LoginStackScreen = () => {
 
     return (
-      <LoginStack.Navigator>
-        <LoginStack.Screen
-          options={{ headerShown: false }}
-          name="LoginScreen"
-          component={LoginScreen}
-        />
+      <>
+      </>
+      // <LoginStack.Navigator>
+      //   <LoginStack.Screen
+      //     options={{ headerShown: false }}
+      //     name="LoginScreen"
+      //     component={LoginScreen}
+      //   />
 
-        <LoginStack.Screen
-          options={{ headerShown: false }}
-          name="Select"
-          component={SelectBase}
-        />
-        <LoginStack.Screen
-          options={{ title: Language.t('selectBase.scanQR'), headerShown: false }}
-          name="Scan"
-          component={ScanScreen}
-        />
+      //   <LoginStack.Screen
+      //     options={{ headerShown: false }}
+      //     name="Select"
+      //     component={SelectBase}
+      //   />
+      //   <LoginStack.Screen
+      //     options={{ title: Language.t('selectBase.scanQR'), headerShown: false }}
+      //     name="Scan"
+      //     component={ScanScreen}
+      //   />
 
-      </LoginStack.Navigator>
+      // </LoginStack.Navigator>
     );
   }
 
   return (
+
     <Provider store={store} >
       <PersistGate loading={null} persistor={persistor} >
         <NavigationContainer>
           <SafeAreaView style={{ flex: 1 }}>
             <MainStack.Navigator>
               <MainStack.Screen
+              
                 options={{ headerShown: false }}
                 name="Login"
                 component={LoginStackScreen}
               />
-              <MainStack.Screen
+              {/* <MainStack.Screen
                 options={{ headerShown: false }}
                 name="Main"
                 component={Mains}
@@ -146,7 +152,7 @@ const App = () => {
                 options={{ headerShown: false }}
                 name="SD_Info"
                 component={SaveDeliveryInfo}
-              />
+              /> */}
 
             </MainStack.Navigator>
           </SafeAreaView>

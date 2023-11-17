@@ -85,7 +85,7 @@ const LoginScreen = () => {
     if (loginReducer.guid.length > 0) auto_login()
   }, []);
   useEffect(() => {
-    console.log('>> isSFeatures : ', isSFeatures)
+    console.log('>> isSFeatures : ', getMac())
     if (registerReducer.machineNum.length == 0)
       getMac()
 
@@ -113,27 +113,81 @@ const LoginScreen = () => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
-  const getMac = async () => {
-    var lodstr = ''
-    for (var i = 0; i < 100; i++) {
-      lodstr += '_'
+  // const getMac = async () => {
+  //   var lodstr = ''
+  //   for (var i = 0; i < 100; i++) {
+  //     lodstr += '_'
 
+  //   }
+
+
+  //   await DeviceInfo.getMacAddress().then((mac) => {
+  //     var a = Math.floor(100000 + Math.random() * 900000);
+  //     console.log(DeviceInfo.getDeviceName())
+  //     console.log('\nmachine > > ' + mac)
+  //     if (mac.length > 0) dispatch(registerActions.machine(mac));
+  //     else NetworkInfo.getBSSID().then(macwifi => {
+  //       console.log('\nmachine(wifi) > > ' + macwifi)
+  //       if (macwifi.length > 0) dispatch(registerActions.machine(macwifi));
+  //       else dispatch(registerActions.machine('9b911981-afbf-42d4-9828-0924a112d48e'));
+  //     }).catch((e) => dispatch(registerActions.machine('9b911981-afbf-42d4-9828-0924a112d48e')));
+  //   }).catch((e) => dispatch(registerActions.machine('9b911981-afbf-42d4-9828-0924a112d48e')));
+  // }
+  const getMac = async () => {
+
+
+    try {
+      let mac = await DeviceInfo.getMacAddress();
+
+      if (isValidMac(mac)) {
+        console.log(await DeviceInfo.getDeviceName());
+        console.log('\nmachine > > ' + mac);
+        dispatch(registerActions.machine(mac));
+      }
+
+      let wifiMac = await NetworkInfo.getBSSID();
+
+      if (isValidMac(wifiMac)) {
+        console.log('\nmachine(wifi) > > ' + wifiMac);
+        dispatch(registerActions.machine(wifiMac));
+      }
+
+      let deviceId = DeviceInfo.getUniqueId();
+
+      if (isValidDeviceId(deviceId)) {
+        console.log('\ndeviceId > > ' + JSON.stringify(deviceId));
+        dispatch(registerActions.machine(deviceId));
+      }
+
+      let uuid = generateUUID();
+      dispatch(registerActions.machine(uuid));
+    } catch (error) {
+      console.error(error);
+      let uuid = generateUUID();
+      dispatch(registerActions.machine(uuid));
+    }
+  };
+  const isValidMac = (mac) => {
+    return mac && mac.length > 0 && mac !== "02:00:00:00:00:00" && typeof (mac) !== 'object';
+  };
+
+  const isValidDeviceId = (deviceId) => {
+    return deviceId && deviceId.length > 0 && deviceId !== "02:00:00:00:00:00" && typeof (deviceId) !== 'object';
+  };
+
+  const generateUUID = () => {
+    let uuid = '';
+    const characters = '0123456789abcdef';
+    for (let i = 0; i < 36; i++) {
+      if (i === 8 || i === 13 || i === 18 || i === 23) {
+        uuid += '-';
+      } else {
+        uuid += characters[Math.floor(Math.random() * characters.length)];
+      }
     }
 
-
-    await DeviceInfo.getMacAddress().then((mac) => {
-      var a = Math.floor(100000 + Math.random() * 900000);
-      console.log(DeviceInfo.getDeviceName())
-      console.log('\nmachine > > ' + mac)
-      if (mac.length > 0) dispatch(registerActions.machine(mac));
-      else NetworkInfo.getBSSID().then(macwifi => {
-        console.log('\nmachine(wifi) > > ' + macwifi)
-        if (macwifi.length > 0) dispatch(registerActions.machine(macwifi));
-        else dispatch(registerActions.machine('9b911981-afbf-42d4-9828-0924a112d48e'));
-      }).catch((e) => dispatch(registerActions.machine('9b911981-afbf-42d4-9828-0924a112d48e')));
-    }).catch((e) => dispatch(registerActions.machine('9b911981-afbf-42d4-9828-0924a112d48e')));
-  }
-
+    return uuid;
+  };
   useEffect(() => {
   }, [])
 
@@ -271,7 +325,7 @@ const LoginScreen = () => {
       }),
     })
       .then((response) => response.json())
-      .then((json) => {    
+      .then((json) => {
         console.log(json);
       })
       .catch((error) => {
@@ -417,21 +471,25 @@ const LoginScreen = () => {
 
   return (
     < >
-      <StatusBar hidden={true} />
-      <SafeAreaView style={{ width: deviceWidth, height: deviceHeight, backgroundColor: Colors.backgroundColor }}>
-        <View style={tabbar}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Select', { data: '' })}>
-            <FontAwesomeIcon name="gear" size={30} color={Colors.fontColor} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              marginLeft: 12,
-              fontSize: FontSize.medium,
-              color: Colors.backgroundLoginColorSecondary,
-            }}></Text>
-        </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+        }}>
         <ScrollView>
+          <View style={tabbar}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Select', { data: '' })}>
+              <FontAwesomeIcon name="gear" size={30} color={Colors.fontColor} />
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginLeft: 12,
+                fontSize: FontSize.medium,
+                color: Colors.backgroundLoginColorSecondary,
+              }}></Text>
+          </View>
+
           <View style={container1}>
             <View style={{ width: deviceWidth / 2 }}>
               <View>
@@ -444,7 +502,7 @@ const LoginScreen = () => {
                 </TouchableNativeFeedback>
 
               </View>
-              {GUID.length==0 ? (<>
+              {GUID.length == 0 ? (<>
 
                 <View
                   style={{
@@ -563,7 +621,7 @@ const LoginScreen = () => {
                     value={isSelected}
                     onValueChange={(value) => setSelection(value)}
 
-                    tintColors={{ true: Colors.buttonTextColor, false: Colors.buttonTextColor }}
+                    tintColors={{ true: Colors.inputText, false: Colors.inputText }}
                     style={styles.checkbox}
                   />
                   <Text style={styles.label} onPress={() => setSelection(!isSelected)}>{Language.t('login.rememberpassword')}</Text>
@@ -594,21 +652,21 @@ const LoginScreen = () => {
                     flexDirection: 'column',
                     alignItems: 'center'
                   }}>
-                  <Text style={Colors.borderColor}>version 1.0.1</Text>
+                  <Text style={Colors.borderColor}>version 1.0.2</Text>
                 </View>
               </>) : (
-                 <ActivityIndicator
-                 style={{
-                   borderRadius: 15,
-                   backgroundColor: null,
-                   width: 100,
-                   height: 100,
-                   alignSelf: 'center',
-                 }}
-                 animating={true}
-                 size="large"
-                 color={Colors.darkPrimiryColor}
-               />
+                <ActivityIndicator
+                  style={{
+                    borderRadius: 15,
+                    backgroundColor: null,
+                    width: 100,
+                    height: 100,
+                    alignSelf: 'center',
+                  }}
+                  animating={true}
+                  size="large"
+                  color={Colors.darkPrimiryColor}
+                />
               )}
             </View>
           </View>
@@ -669,8 +727,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexDirection: 'row',
-    backgroundColor: Colors.backgroundColor
+    flexDirection: 'row', 
   },
   textTitle: {
     alignSelf: 'center',
@@ -720,7 +777,7 @@ const styles = StyleSheet.create({
   },
   label: {
     margin: 8,
-    color: Colors.buttonTextColor,
+    color: Colors.inputText,
   },
 });
 

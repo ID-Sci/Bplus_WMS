@@ -1,5 +1,5 @@
 // const backgroundColor = "#03A9F4";
-const backgroundColor = "#b1b8c0";
+const backgroundColor = "##F0F0F0";
 const backgroundColorSecondary = "#FCFCFC";
 const backgroundLoginColor = "#24B503";
 const backgroundLoginColorSecondary = "#FCFCFC";
